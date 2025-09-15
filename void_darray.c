@@ -7,6 +7,22 @@ struct Darray {
 	void **data;
 };
 
+Darray *init(int capacity) {
+	Darray *p = malloc(sizeof(*p));
+	p -> capacity = capacity;
+	p -> size = 0;
+	p -> data = malloc(capacity * sizeof(void *));
+	return p;
+}
+
+void destroy(Darray *darray) {
+	while (darray -> size--) {
+		free(*(darray -> data++));
+	}
+	free (darray -> data);
+	free (darray);
+}
+
 int size(const Darray *darray) {
 	return darray -> size;
 }
@@ -32,7 +48,8 @@ static int is_full(Darray *darray) {
 }
 
 static void enlarge(Darray *darray) {
-	;
+	darray -> data = realloc(darray -> data, sizeof(void *) * darray->capacity * 2);
+	darray -> capacity *= 2;
 }
 
 /* copies index+1, index+2, ... to index, index+1, ... */
