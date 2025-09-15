@@ -20,6 +20,6 @@ void *get(int index, const Darray *darray);
 
 void insert(void *value, int index, Darray *darray);
 void append(void *value, Darray *darray);
-void remove(int index, Darray *darray);
+void omit(int index, Darray *darray);
 
 #endif

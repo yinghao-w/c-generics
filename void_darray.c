@@ -84,6 +84,6 @@ void append(void *value, Darray *darray) {
 	insert(value, size(darray), darray);
 }
 
-void remove(int index, Darray *darray) {
+void omit(int index, Darray *darray) {
 	shift_down(index, darray);
 }
