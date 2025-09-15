@@ -9,6 +9,7 @@
 struct Darray;
 typedef struct Darray Darray;
 
+/* destroy all destroys the objects to which are pointed by data */
 Darray *init(int capacity);
 void destroy(Darray *darray);
 

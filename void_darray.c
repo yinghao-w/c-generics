@@ -15,6 +15,7 @@ Darray *init(int capacity) {
 	return p;
 }
 
+/* destroys the array and the objects to which its data pointed */
 void destroy(Darray *darray) {
 	while (darray -> size--) {
 		free(*(darray -> data++));
@@ -51,6 +52,8 @@ static void enlarge(Darray *darray) {
 	darray -> data = realloc(darray -> data, sizeof(void *) * darray->capacity * 2);
 	darray -> capacity *= 2;
 }
+
+/* element shifting functions for insertion and deletion */
 
 /* copies index+1, index+2, ... to index, index+1, ... */
 static void shift_down (int index, Darray *darray) {
