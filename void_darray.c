@@ -64,10 +64,8 @@ static void shift_down (int index, Darray *darray) {
 }
 /* copies index, index+1, ... to index+1, index+2, ... */
 static void shift_up (int index, Darray *darray) {
-	void *temp;
-	for (int i = index; i < size(darray) - 1; i++) {
-		temp = darray -> data[i];
-		darray -> data[i+1] = temp;
+	for (int i = size(darray); i > index; i--) {
+		darray -> data[i] = darray -> data[i-1];
 	}
 	darray -> size++;
 }
