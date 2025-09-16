@@ -56,14 +56,14 @@ static void enlarge(Darray *darray) {
 /* element shifting functions for insertion and deletion */
 
 /* copies index+1, index+2, ... to index, index+1, ... */
-static void shift_down (int index, Darray *darray) {
+static void shift_down(int index, Darray *darray) {
 	for (int i = index; i < size(darray) - 1; i++) {
 		darray -> data[i] = darray -> data[i+1];
 	}
 	darray -> size--;
 }
 /* copies index, index+1, ... to index+1, index+2, ... */
-static void shift_up (int index, Darray *darray) {
+static void shift_up(int index, Darray *darray) {
 	for (int i = size(darray); i > index; i--) {
 		darray -> data[i] = darray -> data[i-1];
 	}
