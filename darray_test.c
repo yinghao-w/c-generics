@@ -5,7 +5,7 @@
 
 int main(void) {
 
-	Darray *test_darray = init(2);
+	Darray *test_darray = create(2);
 
 	int *p[100];
 	for (int i=0; i < 100; i++) {

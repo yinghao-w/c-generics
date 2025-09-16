@@ -7,7 +7,7 @@ struct Darray {
 	void **data;
 };
 
-Darray *init(int capacity) {
+Darray *create(int capacity) {
 	Darray *p = malloc(sizeof(*p));
 	p -> capacity = capacity;
 	p -> size = 0;

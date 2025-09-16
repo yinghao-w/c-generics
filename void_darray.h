@@ -10,7 +10,7 @@ struct Darray;
 typedef struct Darray Darray;
 
 /* destroy all destroys the objects to which are pointed by data */
-Darray *init(int capacity);
+Darray *create(int capacity);
 void destroy(Darray *darray);
 
 int size(const Darray *darray);
