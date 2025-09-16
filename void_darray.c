@@ -18,7 +18,7 @@ Darray *init(int capacity) {
 /* destroys the array and the objects to which its data pointed */
 void destroy(Darray *darray) {
 	while (darray -> size--) {
-		free(*(darray -> data++));
+		free((darray -> data[size(darray)]));
 	}
 	free (darray -> data);
 	free (darray);

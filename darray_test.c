@@ -19,7 +19,6 @@ int main(void) {
 	for (int i = 0; i < size(test_darray); i++) {
 		printf("%d\n", *(int *)get(i, test_darray));
 	}
-
 	destroy(test_darray);
 
 	return 0;
