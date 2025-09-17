@@ -29,6 +29,7 @@
 #define INIT(TYPE, PREFIX)													\
 	MAKE_STRUCT(TYPE, PREFIX)												\
 	MAKE_CREATE(TYPE, PREFIX)												\
+	MAKE_DESTROY(TYPE, PREFIX)												\
 	MAKE_SIZE(TYPE, PREFIX)													\
 	MAKE_PUSH(TYPE, PREFIX)													\
 	MAKE_POP(TYPE, PREFIX)
@@ -50,15 +51,14 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 		return p;															\
 	}
 
+/* If the data consists of pointers, the underlying memory to which are
+ * pointed are not freed. For wide applicablity need the user to supply
+ * custom destructors TODO: */
 #define MAKE_DESTROY(TYPE, PREFIX)											\
 	void PREFIX##_destroy(PREFIX##_stack *stack) {							\
-		while (stack -> SIZE--) {											\
-			free(stack -> DATA[stack -> SIZE])								\
-		}																	\
 		free (stack -> DATA);												\
 		free (stack);														\
 	}
-
 
 #define MAKE_SIZE(TYPE, PREFIX)												\
 	int PREFIX##_size(const PREFIX##_stack *stack) {						\
