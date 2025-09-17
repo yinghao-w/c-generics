@@ -33,7 +33,7 @@
 	MAKE_CREATE(TYPE, PREFIX)												\
 	MAKE_SIZE(TYPE, PREFIX)													\
 	MAKE_IS_IN(TYPE, PREFIX)												\
-	MAKE_GET(TYPE, PREFIX)													\
+//	MAKE_GET(TYPE, PREFIX)													\
 	MAKE_INSERT(TYPE, PREFIX)												\
 	MAKE_APPEND(TYPE, PREFIX)												\
 	MAKE_OMIT(TYPE, PREFIX)
@@ -73,7 +73,7 @@
 #define MAKE_IS_IN(TYPE, PREFIX)											\
 	int PREFIX##_is_in(TYPE value, const PREFIX##_darray *darray) {			\
 		for (int i = 0; i < darray->SIZE; i++) {							\
-			if (value == darray -> DATA[i]) {								\
+			if (value == (darray -> DATA[i])) {								\
 				return 1;													\
 			}																\
 		}																	\
@@ -82,7 +82,8 @@
 
 #define MAKE_GET(TYPE, PREFIX)												\
 	TYPE PREFIX##_get(int index, const PREFIX##_darray *darray) {			\
-		return darray -> DATA[index];
+		return darray -> DATA[index];										\
+	}
 
 #define IS_FULL(DARRAY)														\
 	(DARRAY -> SIZE >= DARRAY -> CAP ? 1 : 0);

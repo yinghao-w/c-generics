@@ -12,13 +12,18 @@ void init_pt (point *pt, int a, int b) {
 	pt -> b = b;
 }
 
-INIT(point, pt);
+int comp_pt (point p, point q) {
+	return (p == q);
+}
+
+
+INIT(point, pt)
 
 int main(void) {
 
 	point q;
 
-	ptdarray *p = ptcreate(4);
+	pt_darray *p = pt_create(4);
 	for (int i=0; i<4; i++) {
 		init_pt(p -> data+i, 3 *i, 7*i);
 	};
