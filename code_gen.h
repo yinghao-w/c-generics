@@ -39,7 +39,7 @@
 		int CAP;															\
 		TYPE *DATA;															\
 	};																		\
-	typedef struct PREFIX##_stack PREFIX##_stack;
+typedef struct PREFIX##_stack PREFIX##_stack;
 
 #define MAKE_CREATE(TYPE, PREFIX)											\
 	PREFIX##_stack *PREFIX##_create(int CAP) {								\
@@ -66,7 +66,7 @@
 	}
 
 #define IS_FULL(STACK)														\
-	(STACK -> SIZE >= STACK -> CAP ? 1 : 0);
+	(STACK -> SIZE >= STACK -> CAP ? 1 : 0)
 
 #define ENLARGE(STACK, TYPE)												\
 	STACK -> DATA = realloc(STACK->DATA, sizeof(TYPE) * STACK->CAP * 2);	\
