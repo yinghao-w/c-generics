@@ -1,29 +1,27 @@
-/* dynamic array implementation by code generating macros
+/* stack implementation by code generating macros
  * uses macro INIT(TYPE, PREFIX to generate all the definitions for a
- * dynamic array structure and operations for the specific TYPE, label the
+ * dynamic array structure and stack operations for the specific TYPE, label the
  * structure and operation with PREFIX */
 
 /*
- * example dynamic array for type 'point':
+ * example stack for type 'point':
  *
  * generate all necessary code:
  *
  * INIT(point, pt)
  *
- * initialise array:
+ * initialise stack:
  *
- * pt_darray *my_darray = pt_create(10);
+ * pt_stack *my_stack = pt_create(10);
  *
  * operations:
  *
- * point p, q, r;
- * pt_append(p, my_darray);
- * pt_insert(q, 1, my_darray);
- * pt_is_in(r, my_darray);
+ * point p, q;
+ * pt_push(p, my_stack);
+ * pt_push(q, my_stack);
+ * pt r = pt_pop(my_stack);
 */
 
-
-#include "void_darray.h"
 #include <stdlib.h>
 
 /* declares and defines all necessary functions for a dynamic array structure
@@ -32,23 +30,19 @@
 	MAKE_STRUCT(TYPE, PREFIX)												\
 	MAKE_CREATE(TYPE, PREFIX)												\
 	MAKE_SIZE(TYPE, PREFIX)													\
-	MAKE_IS_IN(TYPE, PREFIX)												\
-//	MAKE_GET(TYPE, PREFIX)													\
-	MAKE_INSERT(TYPE, PREFIX)												\
-	MAKE_APPEND(TYPE, PREFIX)												\
-	MAKE_OMIT(TYPE, PREFIX)
+	MAKE_PUSH(TYPE, PREFIX)													\
 
 #define MAKE_STRUCT(TYPE, PREFIX)											\
-	struct PREFIX##_darray {												\
+	struct PREFIX##_stack {													\
 		int SIZE;															\
 		int CAP;															\
 		TYPE *DATA;															\
 	};																		\
-	typedef struct PREFIX##_darray PREFIX##_darray;
+	typedef struct PREFIX##_stack PREFIX##_stack;
 
 #define MAKE_CREATE(TYPE, PREFIX)											\
-	PREFIX##_darray *PREFIX##_create(int CAP) {								\
-		PREFIX##_darray *p = malloc(sizeof(*p));							\
+	PREFIX##_stack *PREFIX##_create(int CAP) {								\
+		PREFIX##_stack *p = malloc(sizeof(*p));								\
 		p -> SIZE = 0;														\
 		p -> CAP = CAP;														\
 		p -> DATA = malloc(CAP * sizeof(TYPE));								\
@@ -56,68 +50,37 @@
 	}
 
 #define MAKE_DESTROY(TYPE, PREFIX)											\
-	void PREFIX##_destroy(PREFIX##_darray *darray) {						\
-		while (darray -> SIZE--) {											\
-			free(darray -> DATA[darray -> SIZE])							\
+	void PREFIX##_destroy(PREFIX##_stack *stack) {							\
+		while (stack -> SIZE--) {											\
+			free(stack -> DATA[stack -> SIZE])								\
 		}																	\
-		free (darray -> DATA);												\
-		free (darray);														\
+		free (stack -> DATA);												\
+		free (stack);														\
 	}
 
 
 #define MAKE_SIZE(TYPE, PREFIX)												\
-	int PREFIX##_size(const PREFIX##_darray *darray) {						\
-		return darray -> SIZE; 												\
+	int PREFIX##_size(const PREFIX##_stack *stack) {						\
+		return stack -> SIZE; 												\
 	}
 
-#define MAKE_IS_IN(TYPE, PREFIX)											\
-	int PREFIX##_is_in(TYPE value, const PREFIX##_darray *darray) {			\
-		for (int i = 0; i < darray->SIZE; i++) {							\
-			if (value == (darray -> DATA[i])) {								\
-				return 1;													\
+#define IS_FULL(STACK)														\
+	(STACK -> SIZE >= STACK -> CAP ? 1 : 0);
+
+#define ENLARGE(STACK, TYPE)												\
+	STACK -> DATA = realloc(STACK->DATA, sizeof(TYPE) * STACK->CAP * 2);	\
+	STACK -> CAP *= 2;
+
+#define MAKE_PUSH(TYPE, PREFIX)												\
+		void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {				\
+			if (IS_FULL(stack)) {											\
+				ENLARGE(stack, TYPE)										\
 			}																\
-		}																	\
-		return 0;															\
-	}
-
-#define MAKE_GET(TYPE, PREFIX)												\
-	TYPE PREFIX##_get(int index, const PREFIX##_darray *darray) {			\
-		return darray -> DATA[index];										\
-	}
-
-#define IS_FULL(DARRAY)														\
-	(DARRAY -> SIZE >= DARRAY -> CAP ? 1 : 0);
-
-#define ENLARGE(DARRAY, TYPE)												\
-	DARRAY -> DATA = realloc(DARRAY->DATA, sizeof(TYPE) * DARRAY->CAP * 2);	\
-	DARRAY -> CAP *= 2;
-
-#define SHIFT_DOWN(INDEX, DARRAY, TYPE)										\
-		for (int i = INDEX, i < DARRAY->SIZE, i++) {						\
-			DARRAY -> DATA[i] = darray -> data[i+1];						\
-		}																	\
-		darray -> size--;
-
-#define SHIFT_UP(INDEX, DARRAY, TYPE)										\
-		for (int i = DARRAY->SIZE, i > index, i--) {						\
-			DARRAY -> DATA[i] = darray -> data[i-1];						\
-		}																	\
-		darray -> size++;
-
-#define MAKE_INSERT(TYPE, PREFIX)											\
-		void PREFIX##_insert(TYPE value, int index, PREFIX##_darray *darray) {\
-			if (IS_FULL(darray)) {											\
-				ENLARGE(darray, TYPE)										\
-			}																\
-			darray -> DATA[index] = value;									\
+			stack -> DATA[stack -> SIZE] = value;							\
 		}
 
-#define MAKE_APPEND(TYPE, PREFIX)											\
-		void PREFIX##_append(TYPE value, PREFIX##_darray *darray) {			\
-			PREFIX##_insert(value, darray -> SIZE, darray)					\
-		}
-
-#define MAKE_OMIT(TYPE, PREFIX)												\
-		void PREFIX##_omit(int index, PREFIX##_darray *darray) {			\
-			SHIFT_DOWN(index, darray, TYPE)									\
-		}
+/* TODO: consider empty stack case */
+#define MAKE_POP(TYPE, PREFIX)												\
+	TYPE PREFIX##_pop(PREFIX##_stack *stack) {								\
+		return stack -> DATA[--stack -> SIZE];								\
+	}								
