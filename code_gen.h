@@ -31,6 +31,7 @@
 	MAKE_CREATE(TYPE, PREFIX)												\
 	MAKE_SIZE(TYPE, PREFIX)													\
 	MAKE_PUSH(TYPE, PREFIX)													\
+	MAKE_POP(TYPE, PREFIX)
 
 #define MAKE_STRUCT(TYPE, PREFIX)											\
 	struct PREFIX##_stack {													\
