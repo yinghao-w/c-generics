@@ -77,7 +77,7 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 			if (IS_FULL(stack)) {											\
 				ENLARGE(stack, TYPE)										\
 			}																\
-			stack -> DATA[stack -> SIZE] = value;							\
+			stack -> DATA[stack -> SIZE++] = value;							\
 		}
 
 /* TODO: consider empty stack case */
