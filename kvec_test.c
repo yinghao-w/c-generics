@@ -1,0 +1,49 @@
+#include <time.h>
+#include <stdio.h>
+#include "code_gen.h"
+
+
+INIT(int, i)
+
+typedef struct point {
+		int x;
+		int y;
+} point;
+INIT(point, pt)
+
+
+int main()
+{
+	int M = 10, N = 20000000, i, j;
+	clock_t t;
+
+
+	t = clock();
+	for (i = 0; i < M; ++i) {
+		i_stack *stack = i_create(2);
+		for (j = 0; j < N; ++j)
+			i_push(j, stack);
+		for (j = 0; j < N; ++j)
+			i_pop(stack);
+		i_destroy(stack);
+		
+	}
+	printf("code generation stack (int): %.3f sec\n",
+		   (float)(clock() - t) / CLOCKS_PER_SEC);
+	
+
+	t = clock();
+	for (i = 0; i < M; ++i) {
+		pt_stack *stack = pt_create(2);
+		for (j = 0; j < N; ++j)
+			pt_push((point){j, j}, stack);
+		for (j = 0; j < N; ++j)
+			pt_pop(stack);
+		pt_destroy(stack);
+		
+	}
+	printf("code generation stack (point): %.3f sec\n",
+		   (float)(clock() - t) / CLOCKS_PER_SEC);
+
+	return 0;
+}
