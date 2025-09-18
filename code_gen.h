@@ -22,6 +22,10 @@
  * pt r = pt_pop(my_stack);
 */
 
+#ifndef CODE_GEN_H
+
+#define CODE_GEN_H
+
 #include <stdlib.h>
 
 /* declares and defines all necessary functions for a dynamic array structure
@@ -65,10 +69,10 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 		return stack -> SIZE; 												\
 	}
 
-#define IS_FULL(STACK)														\
+#define CG_IS_FULL(STACK)														\
 	(STACK -> SIZE >= STACK -> CAP ? 1 : 0)
 
-#define ENLARGE(STACK, TYPE)												\
+#define CG_ENLARGE(STACK, TYPE)												\
 	STACK -> DATA = realloc(STACK->DATA, sizeof(TYPE) * STACK->CAP * 2);	\
 	STACK -> CAP *= 2;
 
@@ -85,3 +89,5 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 	TYPE PREFIX##_pop(PREFIX##_stack *stack) {								\
 		return stack -> DATA[--stack -> SIZE];								\
 	}								
+
+#endif
