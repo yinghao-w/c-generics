@@ -25,22 +25,22 @@ typedef struct header header;
 		(header *)stack - 1													\
 		)
 
-#define ISFULL(stack) (														\
+#define FP_IS_FULL(stack) (													\
 		(HEADER(stack)->length >= HEADER(stack)->capacity) ? (1) : (0)		\
 		)
 
 #define push(value, stack) (												\
 		((stack == NULL) ?													\
-				(GEN(stack)) :												\
-				((ISFULL(stack)) ?											\
-						(RESIZE(stack)) :									\
+				(FP_INIT(stack)) :											\
+				((FP_IS_FULL(stack)) ?										\
+						(FP_ENLARGE(stack)) :								\
 						(0)													\
 				)															\
 		),																	\
 		stack[HEADER(stack) -> length++] = value							\
 		)
 
-void *resize(void *stack, int element_size) {
+void *fp_enlarge(void *stack, int element_size) {
 	int length = HEADER(stack) -> length;
 	int capacity = HEADER(stack) -> capacity;
 	void *p = realloc(HEADER(stack), 2 * capacity * element_size + sizeof(header));
@@ -50,7 +50,7 @@ void *resize(void *stack, int element_size) {
 	return p;
 }
 
-void *init(void *stack, int element_size) {
+void *fp_init(void *stack, int element_size) {
 	void *p = malloc(element_size + sizeof(header));
 	((header *)p) -> length = 0;
 	((header *)p) -> capacity = 1;
@@ -58,12 +58,12 @@ void *init(void *stack, int element_size) {
 	return p;
 }
 
-#define GEN(stack)	(														\
-		stack = init(stack, sizeof(*stack))									\
+#define FP_INIT(stack)	(													\
+		stack = fp_init(stack, sizeof(*stack))								\
 		)
 
-#define RESIZE(stack) (														\
-		stack = resize(stack, sizeof(*stack))								\
+#define FP_ENLARGE(stack) (													\
+		stack = fp_enlarge(stack, sizeof(*stack))							\
 		)
 
 <<<<<<< HEAD
