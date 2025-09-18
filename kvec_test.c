@@ -1,7 +1,8 @@
 #include <time.h>
 #include <stdio.h>
 #include "code_gen.h"
-#include "void.h"
+/* #include \"void.h\" */
+#include "fat_pointer.h"
 
 
 INIT(int, i)
@@ -47,21 +48,35 @@ int main()
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 
 
+	/* t = clock(); */
+	/* for (i = 0; i < M; ++i) { */
+	/* 	Stack *stack = create(2); */
+	/* 	for (j = 0; j < N; ++j) */
+	/* 	{ */
+	/* 		int *ele = malloc(sizeof(*ele)); */
+	/* 		*ele = j; */
+	/* 		push(ele, stack); */
+	/* 	} */
+	/* 	for (j = 0; j < N; ++j) */
+	/* 		pop(stack); */
+	/* 	destroy(stack); */
+		
+	/* } */
+	/* printf(\"void stack (int): %.3f sec\n\", */
+	/* 	   (float)(clock() - t) / CLOCKS_PER_SEC); */
+
+
 	t = clock();
 	for (i = 0; i < M; ++i) {
-		Stack *stack = create(2);
+		int *stack = NULL;
 		for (j = 0; j < N; ++j)
-		{
-			int *ele = malloc(sizeof(*ele));
-			*ele = j;
-			push(ele, stack);
-		}
+			push(j, stack);
 		for (j = 0; j < N; ++j)
 			pop(stack);
 		destroy(stack);
 		
 	}
-	printf("void stack (int): %.3f sec\n",
+	printf("fat pointer stack (int): %.3f sec\n",
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 
 

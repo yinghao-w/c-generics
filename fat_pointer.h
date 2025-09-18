@@ -5,11 +5,11 @@
  * pointer */
 
 #ifndef FAT_POINTER_H
+
 #define FAT_POINTER_H
 
-#include <bits/types/stack_t.h>
-#include <complex.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 struct header {
 	int length;
@@ -26,42 +26,39 @@ typedef struct header header;
 		(header *)stack - 1													\
 		)
 
-#define IS_FULL(stack) (													\
-		(HEADER(stack)->length >= HEADER(stack)->capacity) ? 1 : 0			\
+#define ISFULL(stack) (													\
+		(HEADER(stack)->length >= HEADER(stack)->capacity) ? (1) : (0)		\
 		)
 
-#define push(value, stack) (												\
-		((stack == NULL) ?													\
-				(stack = init(stack)) :										\
-				((IS_FULL(stack)) ?											\
-						(stack = resize(stack)) :							\
-						(0)													\
-				)															\
-		),																	\
-		stack[HEADER(stack) -> length++] = value							\
-		)
-
-void *resize(void *stack) {
+void *resize(void *stack, int element_size) {
 	int length = HEADER(stack) -> length;
 	int capacity = HEADER(stack) -> capacity;
-	void *p = realloc(stack, 2* capacity + sizeof(header));
+	void *p = realloc(HEADER(stack), 2 * capacity * element_size + sizeof(header));
 	HEADER(p) -> length = length;
 	HEADER(p) -> capacity = 2 * capacity;
 	p = (char *)p + sizeof(header);
 	return p;
 }
-void *init(void *stack) {
-	 void *p = malloc(1 + sizeof(header));
-	 HEADER(p) -> length = 0;
-	 HEADER(p) -> capacity = 1;
-	 p = (char *)p + sizeof(header);
-	 return p;
 
+void *pinit(void *stack, int element_size) {
+	void *p = malloc(element_size + sizeof(header));
+	HEADER(p) -> length = 0;
+	HEADER(p) -> capacity = 1;
+	p = (char *)p + sizeof(header);
+	return p;
 }
+
+#define INIT(stack)	(														\
+		stack = init(stack, sizeof(*stack))									\
+		)
+
+#define RESIZE(stack) (														\
+		stack = resize(stack, sizeof(*stack))								\
+		)
 
 #define pop(stack) (														\
 	HEADER(stack) -> length--,												\
 	stack[HEADER(stack) -> length]											\
 		)
-	
+
 #endif
