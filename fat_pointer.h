@@ -30,25 +30,36 @@ typedef struct header header;
 		(HEADER(stack)->length >= HEADER(stack)->capacity) ? (1) : (0)		\
 		)
 
+#define push(value, stack) (												\
+		((stack == NULL) ?													\
+				(GEN(stack)) :										\
+				((ISFULL(stack)) ?											\
+						(RESIZE(stack)) :							\
+						(0)													\
+				)															\
+		),																	\
+		stack[HEADER(stack) -> length++] = value							\
+		)
+
 void *resize(void *stack, int element_size) {
 	int length = HEADER(stack) -> length;
 	int capacity = HEADER(stack) -> capacity;
 	void *p = realloc(HEADER(stack), 2 * capacity * element_size + sizeof(header));
-	HEADER(p) -> length = length;
-	HEADER(p) -> capacity = 2 * capacity;
+	((header *)p) -> length = length;
+	((header *)p) -> capacity = 2 * capacity;
 	p = (char *)p + sizeof(header);
 	return p;
 }
 
-void *pinit(void *stack, int element_size) {
+void *init(void *stack, int element_size) {
 	void *p = malloc(element_size + sizeof(header));
-	HEADER(p) -> length = 0;
-	HEADER(p) -> capacity = 1;
+	((header *)p) -> length = 0;
+	((header *)p) -> capacity = 1;
 	p = (char *)p + sizeof(header);
 	return p;
 }
 
-#define INIT(stack)	(														\
+#define GEN(stack)	(														\
 		stack = init(stack, sizeof(*stack))									\
 		)
 

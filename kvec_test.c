@@ -80,5 +80,19 @@ int main()
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 
 
+	t = clock();
+	for (i = 0; i < M; ++i) {
+		point *stack = NULL;
+		for (j = 0; j < N; ++j)
+			push(((point){j, j}), stack);
+		for (j = 0; j < N; ++j)
+			pop(stack);
+		destroy(stack);
+		
+	}
+	printf("fat pointer stack (point): %.3f sec\n",
+		   (float)(clock() - t) / CLOCKS_PER_SEC);
+	
+
 	return 0;
 }
