@@ -9,7 +9,6 @@
 #define FAT_POINTER_H
 
 #include <stdlib.h>
-#include <stdio.h>
 
 struct header {
 	int length;
@@ -26,15 +25,15 @@ typedef struct header header;
 		(header *)stack - 1													\
 		)
 
-#define ISFULL(stack) (													\
+#define ISFULL(stack) (														\
 		(HEADER(stack)->length >= HEADER(stack)->capacity) ? (1) : (0)		\
 		)
 
 #define push(value, stack) (												\
 		((stack == NULL) ?													\
-				(GEN(stack)) :										\
+				(GEN(stack)) :												\
 				((ISFULL(stack)) ?											\
-						(RESIZE(stack)) :							\
+						(RESIZE(stack)) :									\
 						(0)													\
 				)															\
 		),																	\
@@ -68,8 +67,7 @@ void *init(void *stack, int element_size) {
 		)
 
 #define pop(stack) (														\
-	HEADER(stack) -> length--,												\
-	stack[HEADER(stack) -> length]											\
+	stack[--HEADER(stack) -> length]										\
 		)
 
 #endif
