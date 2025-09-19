@@ -68,7 +68,6 @@ void *fp_init(void *stack, int element_size) {
 
 /* TODO: consider empty stack case */
 #define fp_pop(stack) (														\
-	stack[--FP_HEADER(stack) -> length]										\
->>>>>>> 1bcb8bf (Add TODO comment)
+		stack[--FP_HEADER(stack) -> length]										
 
 #endif
