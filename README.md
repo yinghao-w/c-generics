@@ -4,15 +4,24 @@ Study on different methods of implementing generic containers in C, specifically
 
 Previously included other dynamic array operations such as insertion and deletion at arbiitrary indexes, but scope was reduced so that this study could be functional sooner. May re-add those operations later, or other data structures.
 
+All implement the following operations:
+- initialisation
+- destruction
+- push
+- pop
+- getting the number of elements in the stack
+
 ## Current implementation methods:
+
 - void ** pointers
 - code generation
+- template instantiation
 - fat pointers (stretchy buffers)
 
 ## Implementation methods of popular public libraries
 
 |Library|Method|
 |---|---|
-|klib|?|
+|klib|code generation|
 |stb\_ds|fat pointers|
-|CMC|?|
+|CMC|template instantiation|
