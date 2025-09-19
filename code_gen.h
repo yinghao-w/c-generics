@@ -69,7 +69,7 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 		return stack -> SIZE; 												\
 	}
 
-#define CG_IS_FULL(STACK)														\
+#define CG_IS_FULL(STACK)													\
 	(STACK -> SIZE >= STACK -> CAP ? 1 : 0)
 
 #define CG_ENLARGE(STACK, TYPE)												\
