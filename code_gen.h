@@ -30,28 +30,28 @@
 
 /* declares and defines all necessary functions for a dynamic array structure
  * specific to the given type */
-#define CG_INIT(TYPE, PREFIX)													\
+#define CG_INIT(TYPE, PREFIX)												\
 	MAKE_STRUCT(TYPE, PREFIX)												\
 	MAKE_CREATE(TYPE, PREFIX)												\
 	MAKE_DESTROY(TYPE, PREFIX)												\
-	MAKE_SIZE(TYPE, PREFIX)													\
+	MAKE_LENGTH(TYPE, PREFIX)												\
 	MAKE_PUSH(TYPE, PREFIX)													\
 	MAKE_POP(TYPE, PREFIX)
 
 #define MAKE_STRUCT(TYPE, PREFIX)											\
 	struct PREFIX##_stack {													\
-		int SIZE;															\
-		int CAP;															\
+		int LENGTH;															\
+		int CAPACITY;														\
 		TYPE *DATA;															\
 	};																		\
 typedef struct PREFIX##_stack PREFIX##_stack;
 
 #define MAKE_CREATE(TYPE, PREFIX)											\
-	PREFIX##_stack *PREFIX##_create(int CAP) {								\
+	PREFIX##_stack *PREFIX##_create(int CAPACITY) {							\
 		PREFIX##_stack *p = malloc(sizeof(*p));								\
-		p -> SIZE = 0;														\
-		p -> CAP = CAP;														\
-		p -> DATA = malloc(CAP * sizeof(TYPE));								\
+		p -> LENGTH = 0;													\
+		p -> CAPACITY = CAPACITY;											\
+		p -> DATA = malloc(CAPACITY * sizeof(TYPE));						\
 		return p;															\
 	}
 
@@ -64,30 +64,30 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 		free (stack);														\
 	}
 
-#define MAKE_SIZE(TYPE, PREFIX)												\
+#define MAKE_LENGTH(TYPE, PREFIX)											\
 	int PREFIX##_size(const PREFIX##_stack *stack) {						\
-		return stack -> SIZE; 												\
+		return stack -> LENGTH; 											\
 	}
 
 #define CG_IS_FULL(STACK)													\
-	(STACK -> SIZE >= STACK -> CAP ? 1 : 0)
+	(STACK -> LENGTH >= STACK -> CAPACITY ? 1 : 0)
 
 #define CG_ENLARGE(STACK, TYPE)												\
-	STACK -> DATA = realloc(STACK->DATA, sizeof(TYPE) * STACK->CAP * 2);	\
-	STACK -> CAP *= 2;
+	STACK -> DATA = realloc(STACK->DATA, sizeof(TYPE)*STACK->CAPACITY*2);	\
+	STACK -> CAPACITY *= 2;
 
 #define MAKE_PUSH(TYPE, PREFIX)												\
 		void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {				\
 			if (CG_IS_FULL(stack)) {										\
 				CG_ENLARGE(stack, TYPE)										\
 			}																\
-			stack -> DATA[stack -> SIZE++] = value;							\
+			stack -> DATA[stack -> LENGTH++] = value;						\
 		}
 
 /* TODO: consider empty stack case */
 #define MAKE_POP(TYPE, PREFIX)												\
 	TYPE PREFIX##_pop(PREFIX##_stack *stack) {								\
-		return stack -> DATA[--stack -> SIZE];								\
+		return stack -> DATA[--stack -> LENGTH];							\
 	}								
 
 #endif
