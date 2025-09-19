@@ -5,13 +5,13 @@
 #include "fat_pointer.h"
 
 
-INIT(int, i)
+CG_INIT(int, i)
 
 typedef struct point {
 		int x;
 		int y;
 } point;
-INIT(point, pt)
+CG_INIT(point, pt)
 
 
 int main()

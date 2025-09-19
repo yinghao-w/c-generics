@@ -1,5 +1,5 @@
 /* stack implementation by code generating macros
- * uses macro INIT(TYPE, PREFIX to generate all the definitions for a
+ * uses macro CG_INIT(TYPE, PREFIX to generate all the definitions for a
  * dynamic array structure and stack operations for the specific TYPE, label the
  * structure and operation with PREFIX */
 
@@ -8,7 +8,7 @@
  *
  * generate all necessary code:
  *
- * INIT(point, pt)
+ * CG_INIT(point, pt)
  *
  * initialise stack:
  *
@@ -30,7 +30,7 @@
 
 /* declares and defines all necessary functions for a dynamic array structure
  * specific to the given type */
-#define INIT(TYPE, PREFIX)													\
+#define CG_INIT(TYPE, PREFIX)													\
 	MAKE_STRUCT(TYPE, PREFIX)												\
 	MAKE_CREATE(TYPE, PREFIX)												\
 	MAKE_DESTROY(TYPE, PREFIX)												\
