@@ -66,8 +66,14 @@ void *init(void *stack, int element_size) {
 		stack = resize(stack, sizeof(*stack))								\
 		)
 
+<<<<<<< HEAD
 #define pop(stack) (														\
 	stack[--HEADER(stack) -> length]										\
+=======
+/* TODO: consider empty stack case */
+#define fp_pop(stack) (														\
+	stack[--FP_HEADER(stack) -> length]										\
+>>>>>>> 1bcb8bf (Add TODO comment)
 		)
 
 #endif
