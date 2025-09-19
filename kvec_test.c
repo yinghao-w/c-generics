@@ -70,10 +70,10 @@ int main()
 	for (i = 0; i < M; ++i) {
 		int *stack = NULL;
 		for (j = 0; j < N; ++j)
-			push(j, stack);
+			fp_push(j, stack);
 		for (j = 0; j < N; ++j)
-			pop(stack);
-		destroy(stack);
+			fp_pop(stack);
+		fp_destroy(stack);
 		
 	}
 	printf("fat pointer stack (int): %.3f sec\n",
@@ -84,10 +84,10 @@ int main()
 	for (i = 0; i < M; ++i) {
 		point *stack = NULL;
 		for (j = 0; j < N; ++j)
-			push(((point){j, j}), stack);
+			fp_push(((point){j, j}), stack);
 		for (j = 0; j < N; ++j)
-			pop(stack);
-		destroy(stack);
+			fp_pop(stack);
+		fp_destroy(stack);
 		
 	}
 	printf("fat pointer stack (point): %.3f sec\n",

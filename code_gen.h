@@ -78,8 +78,8 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 
 #define MAKE_PUSH(TYPE, PREFIX)												\
 		void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {				\
-			if (IS_FULL(stack)) {											\
-				ENLARGE(stack, TYPE)										\
+			if (CG_IS_FULL(stack)) {										\
+				CG_ENLARGE(stack, TYPE)										\
 			}																\
 			stack -> DATA[stack -> SIZE++] = value;							\
 		}
