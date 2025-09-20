@@ -47,7 +47,7 @@
 typedef struct PREFIX##_stack PREFIX##_stack;
 
 #define MAKE_CREATE(TYPE, PREFIX)											\
-	PREFIX##_stack *PREFIX##_create(int CAPACITY) {							\
+	static PREFIX##_stack *PREFIX##_create(int CAPACITY) {					\
 		PREFIX##_stack *p = malloc(sizeof(*p));								\
 		p -> LENGTH = 0;													\
 		p -> CAPACITY = CAPACITY;											\
@@ -59,13 +59,13 @@ typedef struct PREFIX##_stack PREFIX##_stack;
  * pointed are not freed. For wide applicablity need the user to supply
  * custom destructors TODO: */
 #define MAKE_DESTROY(TYPE, PREFIX)											\
-	void PREFIX##_destroy(PREFIX##_stack *stack) {							\
+	static void PREFIX##_destroy(PREFIX##_stack *stack) {					\
 		free (stack -> DATA);												\
 		free (stack);														\
 	}
 
 #define MAKE_LENGTH(TYPE, PREFIX)											\
-	int PREFIX##_length(const PREFIX##_stack *stack) {						\
+	static int PREFIX##_length(const PREFIX##_stack *stack) {				\
 		return stack -> LENGTH; 											\
 	}
 
@@ -77,7 +77,7 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 	STACK -> CAPACITY *= 2;
 
 #define MAKE_PUSH(TYPE, PREFIX)												\
-		void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {				\
+		static void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {		\
 			if (CG_IS_FULL(stack)) {										\
 				CG_ENLARGE(stack, TYPE)										\
 			}																\
@@ -87,7 +87,7 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 /* If the stack is empty, return the empty initialisation of the given
  * type */
 #define MAKE_POP(TYPE, PREFIX)												\
-	TYPE PREFIX##_pop(PREFIX##_stack *stack) {								\
+	static TYPE PREFIX##_pop(PREFIX##_stack *stack) {						\
 		if (stack -> LENGTH == 0) {											\
 			return (TYPE) {};												\
 		}																	\
