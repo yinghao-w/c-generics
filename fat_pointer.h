@@ -75,13 +75,16 @@ void *fp_init(void *stack, int element_size) {
 		stack = fp_enlarge(stack, sizeof(*stack))							\
 		)
 
-/* If the stack is empty, sets the first element of the array to 0, then
- * evaluates to that element. Only way currently of returning a zeroed value
- * for all types. */
+/* Initialises the stack as empty if required. If the stack is empty, zeroes
+ * the first element of the array and evaluates it. */
 #define fp_pop(stack) (														\
-		(FP_HEADER(stack) -> length == 0) ?									\
+		((stack == NULL) ?													\
+				FP_INIT(stack) : (0)										\
+		),																	\
+		((FP_HEADER(stack) -> length == 0) ?								\
 				(memset(stack, 0, sizeof(*stack)), stack[0]) :				\
 				(stack[--FP_HEADER(stack) -> length])						\
+		)																	\
 		)
 
 #endif
