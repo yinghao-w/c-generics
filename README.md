@@ -27,3 +27,4 @@ All implement the following operations:
 |CTL|template instantiation|
 |stb\_ds|fat pointers|
 |CMC|template instantiation|
+|DG_dynarr|code generation|
