@@ -23,5 +23,7 @@ All implement the following operations:
 |Library|Method|
 |---|---|
 |klib|code generation|
+|STC|template instantiation|
+|CTL|template instantiation|
 |stb\_ds|fat pointers|
 |CMC|template instantiation|
