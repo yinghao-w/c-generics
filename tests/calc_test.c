@@ -8,6 +8,7 @@
 
 #include "code_gen.h"
 #include "fat_pointer.h"
+#include "r_void.h"
 
 /* Calculator */
 
@@ -38,7 +39,8 @@ char type(char *token) {
 				int temp2;													\
 				switch (type(token)) {										\
 				case NUMBER:												\
-					CALC_PUSH(atoi(token), stack);							\
+					temp1 = atoi(token);									\
+					CALC_PUSH(temp1, stack);								\
 					break;													\
 				case '+':													\
 					temp1 = CALC_POP(stack) + CALC_POP(stack);				\
@@ -86,25 +88,32 @@ MAKE_CALC(CALC_CREATE, i_push, i_pop, i_destroy, cg)
 MAKE_CALC(CALC_CREATE, fp_push, fp_pop, fp_destroy, fp)
 #undef CALC_CREATE
 
+#define CALC_CREATE V_Stack *stack = v_create(2, sizeof(int));
+#define V_PUSH(value, stack) v_push(&value, stack) 
+int v_pop_wrapper(V_Stack *stack) {int x; v_pop(&x, stack); return x;};
+MAKE_CALC(CALC_CREATE, V_PUSH, v_pop_wrapper, v_destroy, v)
+
 void calc_test(void) {
 
 	char s[] = "1 2 + 3 4 * 5 6 - * +";
 	
 	int cg_result = cg_calc(s);
 	int fp_result = fp_calc(s);
+	int v_result = v_calc(s);
 
 	assert(fp_result == cg_result);
 	assert(fp_result == -9);
-
-	printf("Results:\nCG: %d\nFP: %d\n", cg_result, fp_result);
+	assert(v_result == -9);
 
 	char r[] = "+";
 
 	cg_result = cg_calc(r);
 	fp_result = fp_calc(r);
+	v_result = v_calc(r);
 
 	assert(fp_result == cg_result);
 	assert(fp_result == 0);
+	assert(v_result == 0);
 
-	printf("Results:\nCG: %d\nFP: %d\n", cg_result, fp_result);
+	printf("Calculator valid for each stack.\n");
 }

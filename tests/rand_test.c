@@ -9,6 +9,7 @@
 
 #include "code_gen.h"
 #include "fat_pointer.h"
+#include "r_void.h"
 
 CG_INIT(int, i)
 
@@ -18,6 +19,7 @@ int biased_toss(float bias) {
 	return ((float)rand() / (RAND_MAX) < bias); 
 }
 
+/*TODO: Reinitialise and destroy stack after every i value */
 void rand_test(void) {
 
 	/* Initialises pseudo-random seed. */
@@ -27,14 +29,19 @@ void rand_test(void) {
 
 	i_stack *cg_stack = i_create(1);
 	int *fp_stack = NULL;
+	V_Stack *v_stack = v_create(1, sizeof(int));
 
 	for (int i = 1; i < M; i++) {
 		for (int j = 0; j < N; j++) {
 			if (biased_toss(((float) i) / ((float) M))) {
 				i_push(j, cg_stack);
 				fp_push(j, fp_stack);
+				v_push(&j, v_stack);
 			} else {
-				assert(i_pop(cg_stack) == fp_pop(fp_stack));
+				int p;
+				v_pop(&p, v_stack);
+				assert(p == i_pop(cg_stack));
+				assert(p == fp_pop(fp_stack));
 			}
 		}
 		printf("Successful test with %.1f push bias.\n", ((float) i) / ((float) M));
@@ -42,4 +49,5 @@ void rand_test(void) {
 
 	i_destroy(cg_stack);
 	fp_destroy(fp_stack);
+	v_destroy(v_stack);
 }
