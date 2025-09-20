@@ -89,7 +89,7 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 #define MAKE_POP(TYPE, PREFIX)												\
 	static TYPE PREFIX##_pop(PREFIX##_stack *stack) {						\
 		if (stack -> LENGTH == 0) {											\
-			return (TYPE) {};												\
+			return (TYPE) {0};												\
 		}																	\
 		return stack -> DATA[--stack -> LENGTH];							\
 	}								

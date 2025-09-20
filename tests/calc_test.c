@@ -90,7 +90,7 @@ MAKE_CALC(CALC_CREATE, fp_push, fp_pop, fp_destroy, fp)
 
 #define CALC_CREATE V_Stack *stack = v_create(2, sizeof(int));
 #define V_PUSH(value, stack) v_push(&value, stack) 
-int v_pop_wrapper(V_Stack *stack) {int x; v_pop(&x, stack); return x;};
+int v_pop_wrapper(V_Stack *stack) {int x; v_pop(&x, stack); return x;}
 MAKE_CALC(CALC_CREATE, V_PUSH, v_pop_wrapper, v_destroy, v)
 
 void calc_test(void) {
