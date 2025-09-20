@@ -39,4 +39,7 @@ void rand_test(void) {
 		}
 		printf("Successful test with %.1f push bias.\n", ((float) i) / ((float) M));
 	}
+
+	i_destroy(cg_stack);
+	fp_destroy(fp_stack);
 }

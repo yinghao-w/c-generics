@@ -37,7 +37,6 @@ char type(char *token) {
 				int temp1;													\
 				int temp2;													\
 				switch (type(token)) {										\
-				int x;														\
 				case NUMBER:												\
 					CALC_PUSH(atoi(token), stack);							\
 					break;													\
