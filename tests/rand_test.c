@@ -1,6 +1,6 @@
 /* Applies push and pop operations in a pseudorandom order, with varying
  * probability of each operation. Asserts that the popped values are
- * identical */
+ * identical. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +19,6 @@ int biased_toss(float bias) {
 	return ((float)rand() / (RAND_MAX) < bias); 
 }
 
-/*TODO: Reinitialise and destroy stack after every i value */
 void rand_test(void) {
 
 	/* Initialises pseudo-random seed. */
@@ -27,27 +26,33 @@ void rand_test(void) {
 	int M = 10;
 	int N = 20000000;
 
-	i_stack *cg_stack = i_create(1);
-	int *fp_stack = NULL;
-	V_Stack *v_stack = v_create(1, sizeof(int));
-
 	for (int i = 1; i < M; i++) {
+		i_stack *cg_stack = i_create(1);
+		int *fp_stack = NULL;
+		V_Stack *v_stack = v_create(1, sizeof(int));
+
+		int pushes = 0;
+		int pops = 0;
+
 		for (int j = 0; j < N; j++) {
 			if (biased_toss(((float) i) / ((float) M))) {
 				i_push(j, cg_stack);
 				fp_push(j, fp_stack);
 				v_push(&j, v_stack);
+				pushes++;
 			} else {
 				int p;
 				v_pop(&p, v_stack);
 				assert(p == i_pop(cg_stack));
 				assert(p == fp_pop(fp_stack));
+				pops++;
 			}
 		}
-		printf("Successful test with %.1f push bias.\n", ((float) i) / ((float) M));
-	}
 
-	i_destroy(cg_stack);
-	fp_destroy(fp_stack);
-	v_destroy(v_stack);
+		i_destroy(cg_stack);
+		fp_destroy(fp_stack);
+		v_destroy(v_stack);
+		printf("Successful test with %.1f push bias: ", ((float) i) / ((float) M));
+		printf("%*d pushes, %*d pops\n", 8, pushes, 8, pops);
+	}
 }
