@@ -87,14 +87,25 @@ MAKE_CALC(CALC_CREATE, i_push, i_pop, i_destroy, cg)
 MAKE_CALC(CALC_CREATE, fp_push, fp_pop, fp_destroy, fp)
 #undef CALC_CREATE
 
-int main(int argc, char *argv[]) {
+void calc_test(void) {
+
+	char s[] = "1 2 + 3 4 * 5 6 - * +";
 	
-	int fp_result = fp_calc(argv[1]);
-	int cg_result = cg_calc(argv[1]);
+	int cg_result = cg_calc(s);
+	int fp_result = fp_calc(s);
 
 	assert(fp_result == cg_result);
+	assert(fp_result == -9);
 
 	printf("Results:\nCG: %d\nFP: %d\n", cg_result, fp_result);
 
-	return 0;
+	char r[] = "+";
+
+	cg_result = cg_calc(r);
+	fp_result = fp_calc(r);
+
+	assert(fp_result == cg_result);
+	assert(fp_result == 0);
+
+	printf("Results:\nCG: %d\nFP: %d\n", cg_result, fp_result);
 }

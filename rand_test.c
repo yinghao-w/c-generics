@@ -40,8 +40,3 @@ void rand_test(void) {
 		printf("Successful test with %.1f push bias.\n", ((float) i) / ((float) M));
 	}
 }
-
-int main(void) {
-	rand_test();
-	return 0;
-}
