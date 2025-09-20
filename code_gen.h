@@ -65,7 +65,7 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 	}
 
 #define MAKE_LENGTH(TYPE, PREFIX)											\
-	int PREFIX##_size(const PREFIX##_stack *stack) {						\
+	int PREFIX##_length(const PREFIX##_stack *stack) {						\
 		return stack -> LENGTH; 											\
 	}
 
