@@ -1,8 +1,16 @@
-/* stack implementation with the 'fat pointer' or 'stretchy buffer' method
+/* Stack implementation with the 'fat pointer' or 'stretchy buffer' method
  *
- * the data is stored in a regular array owned by the handle pointer, while the
+ * The data is stored in a regular array owned by the handle pointer, while the
  * metadata of size and capacity is stored in the memory location behind the
- * pointer */
+ * pointer.
+ *
+ * Usage:
+ * int *stack = NULL;
+ * fp_push(1, stack);
+ * fp_push(2, stack);
+ * fp_pop(stack);		<- returns 2
+ * fp_destroy(stack);
+ */
 
 #ifndef FAT_POINTER_H
 
