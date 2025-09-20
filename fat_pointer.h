@@ -59,7 +59,7 @@ static void *fp_enlarge(void *stack, int element_size) {
 	return p;
 }
 
-static void *fp_init(void *stack, int element_size) {
+static void *fp_init(int element_size) {
 	void *p = malloc(element_size + sizeof(fp_header));
 	((fp_header *)p) -> length = 0;
 	((fp_header *)p) -> capacity = 1;
@@ -68,7 +68,7 @@ static void *fp_init(void *stack, int element_size) {
 }
 
 #define FP_INIT(stack)	(													\
-		stack = fp_init(stack, sizeof(*stack))								\
+		stack = fp_init(sizeof(*stack))										\
 		)
 
 #define FP_ENLARGE(stack) (													\
