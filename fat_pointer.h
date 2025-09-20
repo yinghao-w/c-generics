@@ -9,6 +9,7 @@
 #define FAT_POINTER_H
 
 #include <stdlib.h>
+#include <string.h>
 
 struct fp_header {
 	int length;
@@ -21,12 +22,12 @@ typedef struct fp_header fp_header;
 		free (FP_HEADER(stack))												\
 		)
 
-#define FP_HEADER(stack) (														\
-		(fp_header *)stack - 1													\
+#define FP_HEADER(stack) (													\
+		(fp_header *)stack - 1												\
 		)
 
 #define FP_IS_FULL(stack) (													\
-		(FP_HEADER(stack)->length >= FP_HEADER(stack)->capacity) ? (1) : (0)		\
+		(FP_HEADER(stack)->length >= FP_HEADER(stack)->capacity) ? (1) : (0)\
 		)
 
 #define fp_push(value, stack) (												\
@@ -66,9 +67,13 @@ void *fp_init(void *stack, int element_size) {
 		stack = fp_enlarge(stack, sizeof(*stack))							\
 		)
 
-/* TODO: consider empty stack case */
+/* If the stack is empty, sets the first element of the array to 0, then
+ * evaluates to that element. Only way currently of returning a zeroed value
+ * for all types. */
 #define fp_pop(stack) (														\
-		stack[--FP_HEADER(stack) -> length]									\
+		(FP_HEADER(stack) -> length == 0) ?									\
+				(memset(stack, 0, sizeof(*stack)), stack[0]) :				\
+				(stack[--FP_HEADER(stack) -> length])						\
 		)
 
 #endif

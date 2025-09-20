@@ -84,9 +84,13 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 			stack -> DATA[stack -> LENGTH++] = value;						\
 		}
 
-/* TODO: consider empty stack case */
+/* If the stack is empty, return the empty initialisation of the given
+ * type */
 #define MAKE_POP(TYPE, PREFIX)												\
 	TYPE PREFIX##_pop(PREFIX##_stack *stack) {								\
+		if (stack -> LENGTH == 0) {											\
+			return (TYPE) {};												\
+		}																	\
 		return stack -> DATA[--stack -> LENGTH];							\
 	}								
 
