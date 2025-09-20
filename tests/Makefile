@@ -3,6 +3,6 @@ CFLAGS = -std=c99 -g -Wall -Wextra -Wduplicated-cond -Wduplicated-branches -Wlog
 INCLUDE=-I ..
 OUTPUT = test.out
 
-tests: tests.c kvec_test.c calc_test.c rand_test.c ../r_void.c
-	$(CC) $(CFLAGS) $(INCLUDE) -o $(OUTPUT) tests.c kvec_test.c calc_test.c rand_test.c	../r_void.c
+tests: tests.c kvec_test.c calc_test.c rand_test.c ../void.c
+	$(CC) $(CFLAGS) $(INCLUDE) -o $(OUTPUT) tests.c kvec_test.c calc_test.c rand_test.c	../void.c
 	./$(OUTPUT)

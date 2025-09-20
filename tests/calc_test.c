@@ -8,7 +8,7 @@
 
 #include "code_gen.h"
 #include "fat_pointer.h"
-#include "r_void.h"
+#include "void.h"
 
 /* Calculator */
 

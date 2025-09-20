@@ -1,21 +1,18 @@
-/* stack implementation with void pointers
- * values are not stored contiguously, poor performance
- * stack elements are pointers*/
+ /* this allows concrete data type elements. */
 
-#ifndef VOID_DARRAY_H
+#ifndef VOID_H
 
-#define VOID_DARRAY_H
+#define VOID_H
 
-struct Stack;
-typedef struct Stack Stack;
+struct V_Stack;
+typedef struct V_Stack V_Stack;
 
-/* destroy all destroys the objects to which are pointed by data */
-Stack *create(int capacity);
-void destroy(Stack *stack);
+V_Stack *v_create(int capacity, int element_size);
+void v_destroy(V_Stack *stack);
 
-int size(const Stack *stack);
+int v_length(const V_Stack *stack);
 
-void push(void *value, Stack *stack);
-void *pop(Stack *stack);
+void v_push(const void *value, V_Stack *stack);
+void v_pop(void *value, V_Stack *stack);
 
 #endif

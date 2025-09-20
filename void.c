@@ -1,52 +1,76 @@
 #include <stdlib.h>
+#include <string.h>
 #include "void.h"
 
-struct Stack {
-	int size;
+struct V_Stack {
+	int length;
 	int capacity;
-	void **data;
+	int element_size;
+	char *data;
 };
 
-Stack *create(int capacity) {
-	Stack *p = malloc(sizeof(*p));
+V_Stack *v_create(int capacity, int element_size) {
+	V_Stack *p = malloc(sizeof(*p));
 	p -> capacity = capacity;
-	p -> size = 0;
-	p -> data = malloc(capacity * sizeof(void *));
+	p -> length = 0;
+	p -> element_size = element_size;
+	p -> data = malloc(capacity * element_size);
 	return p;
 }
 
 /* destroys the stack  and the objects to which its data pointed */
-void destroy(Stack *stack) {
-	while (stack -> size--) {
-		free((stack -> data[stack -> size]));
-	}
+void v_destroy(V_Stack *stack) {
 	free (stack -> data);
 	free (stack);
 }
 
-int size(const Stack *stack) {
-	return stack -> size;
+int v_length(const V_Stack *stack) {
+	return stack -> length;
 }
 
-static int is_full(Stack *stack) {
-	return (stack->size >= stack->capacity) ? 1 : 0;
+static int v_is_full(V_Stack *stack) {
+	return (stack->length >= stack->capacity) ? 1 : 0;
 }
 
-static void enlarge(Stack *stack) {
-	stack -> data = realloc(stack -> data, sizeof(void *) * stack->capacity * 2);
+static void v_enlarge(V_Stack *stack) {
+	stack -> data = realloc(stack -> data, 2 * stack->capacity * stack->element_size);
 	stack -> capacity *= 2;
 }
 
-void push(void *value, Stack *stack) {
-	if (is_full(stack)) {
-		enlarge(stack);
+
+void v_push(const void *value, V_Stack *stack) {
+	if (v_is_full(stack)) {
+		v_enlarge(stack);
 	}
-	stack -> data[stack -> size] = value;
+	memcpy(stack->data + stack->element_size * stack->length, value, stack->element_size);
+	stack->length++;
 }
 
-void *pop(Stack *stack) {
-	if (stack -> size == 0) {
-		return NULL;
+/* TODO: Consider case when output value is not needed, eg pass NULL */
+void v_pop(void *value, V_Stack *stack) {
+	if (stack->length == 0) {
+		memset(value, 0, stack->element_size);
+	} else {
+		memcpy(value, stack->data + stack->element_size * (stack->length - 1), stack->element_size);
+		stack->length--;
 	}
-	return stack -> data[--(stack -> size)];
 }
+
+/*
+ * 				EMPTY STACK 									NONEMPTY
+ * -------------------------------------------------------------------------------------------
+ *  OUTPUT	|	memset value to 0						memset value to stack pos - 1
+ *			|											stack length--
+ *			|
+ *			|
+ *			|
+ *			|
+ * ------------------------------------------------------------------------------------------
+ *  NO		|	do nothing								stack length--
+ *  OUTPUT	|
+ *			|
+ *			|
+ *			|
+ *			|
+ *			|
+ */
