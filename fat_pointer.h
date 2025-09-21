@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* TODO: use size_t to ensure alignment. Tests haven't been able to find
+ * any odd behaviour with strict alignment long doubles, but to be safe. */
 struct fp_header {
 	int length;
 	int capacity;
