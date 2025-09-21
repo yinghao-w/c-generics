@@ -28,3 +28,4 @@ All implement the following operations:
 |stb\_ds|fat pointers|
 |CMC|template instantiation|
 |DG_dynarr|code generation|
+|Collections-C sized|void|
