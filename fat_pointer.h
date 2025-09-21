@@ -83,7 +83,7 @@ static void *fp_init(int element_size) {
 		),																	\
 		((FP_HEADER(stack) -> length == 0) ?								\
 				(memset(stack, 0, sizeof(*stack)), stack[0]) :				\
-				(stack[--FP_HEADER(stack) -> length])						\
+				(stack[--(FP_HEADER(stack) -> length)])						\
 		)																	\
 		)
 
