@@ -54,19 +54,17 @@ typedef struct fp_header fp_header;
 static void *fp_enlarge(void *stack, int element_size) {
 	int length = FP_HEADER(stack) -> length;
 	int capacity = FP_HEADER(stack) -> capacity;
-	void *p = realloc(FP_HEADER(stack), 2 * capacity * element_size + sizeof(fp_header));
-	((fp_header *)p) -> length = length;
-	((fp_header *)p) -> capacity = 2 * capacity;
-	p = (char *)p + sizeof(fp_header);
-	return p;
+	fp_header *p = realloc(FP_HEADER(stack), 2 * capacity * element_size + sizeof(fp_header));
+	p -> length = length;
+	p -> capacity = 2 * capacity;
+	return ++p;
 }
 
 static void *fp_init(int element_size) {
-	void *p = malloc(element_size + sizeof(fp_header));
-	((fp_header *)p) -> length = 0;
-	((fp_header *)p) -> capacity = 1;
-	p = (char *)p + sizeof(fp_header);
-	return p;
+	fp_header *p = malloc(element_size + sizeof(fp_header));
+	p -> length = 0;
+	p -> capacity = 1;
+	return ++p;
 }
 
 #define FP_INIT(stack)	(													\
