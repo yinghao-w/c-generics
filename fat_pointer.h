@@ -56,6 +56,7 @@ typedef struct fp_header fp_header;
 		darray[FP_HEADER(darray) -> length++] = value							\
 		)
 
+/* TODO: unify enlarge and init into a single function */
 static void *fp_enlarge(void *darray, int element_size) {
 	int length = FP_HEADER(darray) -> length;
 	int capacity = FP_HEADER(darray) -> capacity;
