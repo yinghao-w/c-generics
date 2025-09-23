@@ -27,6 +27,7 @@
 #define CODE_GEN_H
 
 #include <stdlib.h>
+#include <string.h>
 
 /* declares and defines all necessary functions for a dynamic array structure
  * specific to the given type */
@@ -36,7 +37,10 @@
 	MAKE_DESTROY(TYPE, PREFIX)												\
 	MAKE_LENGTH(TYPE, PREFIX)												\
 	MAKE_PUSH(TYPE, PREFIX)													\
-	MAKE_POP(TYPE, PREFIX)
+	MAKE_POP(TYPE, PREFIX)													\
+	MAKE_INSERT(TYPE, PREFIX)\
+	MAKE_DELETE(TYPE, PREFIX)\
+	MAKE_GET(TYPE, PREFIX)
 
 #define MAKE_STRUCT(TYPE, PREFIX)											\
 	struct PREFIX##_darray {													\
@@ -100,18 +104,23 @@
 		if (CG_IS_FULL(darray)) {											\
 			CG_ENLARGE(darray, TYPE);										\
 		}																	\
-		memmove(darray->DATA + index + 1, darray->DATA + index, sizeof(TYPE) * (darray->length - index))	\
-		darray->DATA[darray->index] = value;								\
+		memmove(darray->DATA + index + 1, darray->DATA + index, sizeof(TYPE) * (darray->LENGTH - index));	\
+		darray->LENGTH++;\
+		darray->DATA[index] = value;								\
 	}
 
+/* TODO: decide on behaviour when index > length */
 #define MAKE_DELETE(TYPE, PREFIX) 											\
 	static TYPE PREFIX##_delete(int index, PREFIX##_darray *darray) {	\
-		TYPE value = darray -> DATA[index]\
-		memmove(darray->DATA + index, darray->DATA + index + 1, sizeof(TYPE) * (darray->length - index - 1))	\
+		TYPE value = darray -> DATA[index];\
+		memmove(darray->DATA + index, darray->DATA + index + 1, sizeof(TYPE) * (darray->LENGTH - index - 1));	\
+		darray->LENGTH--;\
+		return value;\
 	}
 
+/* TODO: decide on behaviour when index > length */
 #define MAKE_GET(TYPE, PREFIX)			\
-	static TYPE PREFIX##_get(int index, PREFIX##_darray *darray) {	\
+	static TYPE PREFIX##_get(int index, const PREFIX##_darray *darray) {	\
 		return darray -> DATA[index];					\
 	}
 
