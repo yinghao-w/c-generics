@@ -29,3 +29,4 @@ All implement the following operations:
 |CMC|template instantiation|
 |DG_dynarr|code generation|
 |Collections-C sized|void|
+|qlibc|void|
