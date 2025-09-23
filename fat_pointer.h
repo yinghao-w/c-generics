@@ -1,15 +1,15 @@
-/* Stack implementation with the 'fat pointer' or 'stretchy buffer' method
+/* Darray implementation with the 'fat pointer' or 'stretchy buffer' method
  *
  * The data is stored in a regular array owned by the handle pointer, while the
  * metadata of size and capacity is stored in the memory location behind the
  * pointer.
  *
  * Usage:
- * int *stack = NULL;
- * fp_push(1, stack);
- * fp_push(2, stack);
- * fp_pop(stack);		<- returns 2
- * fp_destroy(stack);
+ * int *darray = NULL;
+ * fp_push(1, darray);
+ * fp_push(2, darray);
+ * fp_pop(darray);		<- returns 2
+ * fp_destroy(darray);
  */
 
 #ifndef FAT_POINTER_H
@@ -28,33 +28,38 @@ struct fp_header {
 };
 typedef struct fp_header fp_header;
 
-#define fp_destroy(stack) (													\
-		free (FP_HEADER(stack))												\
+#define fp_destroy(darray) (													\
+		free (FP_HEADER(darray))												\
 		)
 
-#define FP_HEADER(stack) (													\
-		(fp_header *)stack - 1												\
+#define FP_HEADER(darray) (													\
+		(fp_header *)darray - 1												\
 		)
 
-#define FP_IS_FULL(stack) (													\
-		(FP_HEADER(stack)->length >= FP_HEADER(stack)->capacity) ? (1) : (0)\
+/* TODO: Use this macro elsewhere in this file */
+#define fp_length(darray) (\
+		FP_HEADER(darray) -> length\
 		)
 
-#define fp_push(value, stack) (												\
-		((stack == NULL) ?													\
-				(FP_INIT(stack)) :											\
-				((FP_IS_FULL(stack)) ?										\
-						(FP_ENLARGE(stack)) :								\
+#define FP_IS_FULL(darray) (													\
+		(FP_HEADER(darray)->length >= FP_HEADER(darray)->capacity) ? (1) : (0)\
+		)
+
+#define fp_push(value, darray) (												\
+		((darray == NULL) ?													\
+				(FP_INIT(darray)) :											\
+				((FP_IS_FULL(darray)) ?										\
+						(FP_ENLARGE(darray)) :								\
 						(0)													\
 				)															\
 		),																	\
-		stack[FP_HEADER(stack) -> length++] = value							\
+		darray[FP_HEADER(darray) -> length++] = value							\
 		)
 
-static void *fp_enlarge(void *stack, int element_size) {
-	int length = FP_HEADER(stack) -> length;
-	int capacity = FP_HEADER(stack) -> capacity;
-	fp_header *p = realloc(FP_HEADER(stack), 2 * capacity * element_size + sizeof(fp_header));
+static void *fp_enlarge(void *darray, int element_size) {
+	int length = FP_HEADER(darray) -> length;
+	int capacity = FP_HEADER(darray) -> capacity;
+	fp_header *p = realloc(FP_HEADER(darray), 2 * capacity * element_size + sizeof(fp_header));
 	p -> length = length;
 	p -> capacity = 2 * capacity;
 	return ++p;
@@ -67,24 +72,45 @@ static void *fp_init(int element_size) {
 	return ++p;
 }
 
-#define FP_INIT(stack)	(													\
-		stack = fp_init(sizeof(*stack))										\
+#define FP_INIT(darray)	(													\
+		darray = fp_init(sizeof(*darray))										\
 		)
 
-#define FP_ENLARGE(stack) (													\
-		stack = fp_enlarge(stack, sizeof(*stack))							\
+#define FP_ENLARGE(darray) (													\
+		darray = fp_enlarge(darray, sizeof(*darray))							\
 		)
 
-/* Initialises the stack as empty if required. If the stack is empty, zeroes
+/* Initialises the darray as empty if required. If the darray is empty, zeroes
  * the first element of the array and evaluates it. */
-#define fp_pop(stack) (														\
-		((stack == NULL) ?													\
-				FP_INIT(stack) : (0)										\
+#define fp_pop(darray) (														\
+		((darray == NULL) ?													\
+				FP_INIT(darray) : (0)										\
 		),																	\
-		((FP_HEADER(stack) -> length == 0) ?								\
-				(memset(stack, 0, sizeof(*stack)), stack[0]) :				\
-				(stack[--(FP_HEADER(stack) -> length)])						\
+		((FP_HEADER(darray) -> length == 0) ?								\
+				(memset(darray, 0, sizeof(*darray)), darray[0]) :				\
+				(darray[--(FP_HEADER(darray) -> length)])						\
 		)																	\
 		)
+
+#define fp_insert(value, index, darray) (\
+		((darray == NULL) ?													\
+				(FP_INIT(darray)) :											\
+				((FP_IS_FULL(darray)) ?										\
+						(FP_ENLARGE(darray)) :								\
+						(0)													\
+				)															\
+		),																	\
+		memmove(darray + index + 1, darray + index, sizeof(*darray) * (FP_HEADER(darray)->length - index)), \
+		FP_HEADER(darray)->length++,\
+		darray[index] = value,		\
+		0\
+		)
+
+#define fp_delete(index, darray) (\
+		memmove(darray + index, darray + index + 1,							\
+			sizeof(*darray) * (FP_HEADER(darray)->length - index - 1)), 	\
+		--FP_HEADER(darray)->length,\
+		0\
+		) 
 
 #endif
