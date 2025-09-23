@@ -38,12 +38,12 @@
 	MAKE_LENGTH(TYPE, PREFIX)												\
 	MAKE_PUSH(TYPE, PREFIX)													\
 	MAKE_POP(TYPE, PREFIX)													\
-	MAKE_INSERT(TYPE, PREFIX)\
-	MAKE_DELETE(TYPE, PREFIX)\
+	MAKE_INSERT(TYPE, PREFIX)												\
+	MAKE_DELETE(TYPE, PREFIX)												\
 	MAKE_GET(TYPE, PREFIX)
 
 #define MAKE_STRUCT(TYPE, PREFIX)											\
-	struct PREFIX##_darray {													\
+	struct PREFIX##_darray {												\
 		int LENGTH;															\
 		int CAPACITY;														\
 		TYPE *DATA;															\
@@ -52,7 +52,7 @@
 
 #define MAKE_CREATE(TYPE, PREFIX)											\
 	static PREFIX##_darray *PREFIX##_create(int CAPACITY) {					\
-		PREFIX##_darray *p = malloc(sizeof(*p));								\
+		PREFIX##_darray *p = malloc(sizeof(*p));							\
 		p -> LENGTH = 0;													\
 		p -> CAPACITY = CAPACITY;											\
 		p -> DATA = malloc(CAPACITY * sizeof(TYPE));						\
@@ -76,23 +76,23 @@
 #define CG_IS_FULL(DARRAY)													\
 	(DARRAY -> LENGTH >= DARRAY -> CAPACITY ? 1 : 0)
 
-#define CG_ENLARGE(DARRAY, TYPE)												\
-	DARRAY -> DATA = realloc(DARRAY->DATA, sizeof(TYPE)*DARRAY->CAPACITY*2);	\
+#define CG_ENLARGE(DARRAY, TYPE)											\
+	DARRAY -> DATA = realloc(DARRAY->DATA, sizeof(TYPE)*DARRAY->CAPACITY*2);\
 	DARRAY -> CAPACITY *= 2;
 
 #define MAKE_PUSH(TYPE, PREFIX)												\
 	static void PREFIX##_push(TYPE value, PREFIX##_darray *darray) {		\
-		if (CG_IS_FULL(darray)) {										\
+		if (CG_IS_FULL(darray)) {											\
 			CG_ENLARGE(darray, TYPE)										\
-		}																\
-		darray -> DATA[darray -> LENGTH++] = value;						\
+		}																	\
+		darray -> DATA[darray -> LENGTH++] = value;							\
 	}
 
 /* If the darray is empty, return the empty initialisation of the given
  * type */
 #define MAKE_POP(TYPE, PREFIX)												\
 	static TYPE PREFIX##_pop(PREFIX##_darray *darray) {						\
-		if (darray -> LENGTH == 0) {											\
+		if (darray -> LENGTH == 0) {										\
 			return (TYPE) {0};												\
 		}																	\
 		return darray -> DATA[--darray -> LENGTH];							\
@@ -100,28 +100,31 @@
 
 /* TODO: decide on behaviour when index > length */
 #define MAKE_INSERT(TYPE, PREFIX) 											\
-	static void PREFIX##_insert(TYPE value, int index, PREFIX##_darray *darray) {	\
+	static void PREFIX##_insert(TYPE value, int index,						\
+		PREFIX##_darray *darray) {											\
 		if (CG_IS_FULL(darray)) {											\
 			CG_ENLARGE(darray, TYPE);										\
 		}																	\
-		memmove(darray->DATA + index + 1, darray->DATA + index, sizeof(TYPE) * (darray->LENGTH - index));	\
-		darray->LENGTH++;\
-		darray->DATA[index] = value;								\
+		memmove(darray->DATA + index + 1, darray->DATA + index,				\
+			sizeof(TYPE) * (darray->LENGTH - index));						\
+		darray->LENGTH++;													\
+		darray->DATA[index] = value;										\
 	}
 
 /* TODO: decide on behaviour when index > length */
 #define MAKE_DELETE(TYPE, PREFIX) 											\
-	static TYPE PREFIX##_delete(int index, PREFIX##_darray *darray) {	\
-		TYPE value = darray -> DATA[index];\
-		memmove(darray->DATA + index, darray->DATA + index + 1, sizeof(TYPE) * (darray->LENGTH - index - 1));	\
-		darray->LENGTH--;\
-		return value;\
+	static TYPE PREFIX##_delete(int index, PREFIX##_darray *darray) {		\
+		TYPE value = darray -> DATA[index];									\
+		memmove(darray->DATA + index, darray->DATA + index + 1,				\
+			sizeof(TYPE) * (darray->LENGTH - index - 1));					\
+		darray->LENGTH--;													\
+		return value;														\
 	}
 
 /* TODO: decide on behaviour when index > length */
-#define MAKE_GET(TYPE, PREFIX)			\
+#define MAKE_GET(TYPE, PREFIX)												\
 	static TYPE PREFIX##_get(int index, const PREFIX##_darray *darray) {	\
-		return darray -> DATA[index];					\
+		return darray -> DATA[index];										\
 	}
 
 #endif
