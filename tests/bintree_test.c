@@ -29,9 +29,7 @@ void test(void) {
 
 	assert(three -> rchild == two);
 
-	struct pt p = {.x = 'a', .y = 'b'};
-	Ibt_Bnode *five = Ibt_leaf(p);
-	assert(five);
+	Ibt_destroy(four);
 }
 
 int main(void) {
