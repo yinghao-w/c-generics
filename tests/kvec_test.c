@@ -1,4 +1,4 @@
-/* Stack speed test. Consists of 20 000 000 pushes of consecutive integers
+/* Darray speed test. Consists of 20 000 000 pushes of consecutive integers
  * or integral points, then pops each one. */
 
 #include <time.h>
@@ -24,57 +24,57 @@ void speed_test(void)
 
 	t = clock();
 	for (i = 0; i < M; ++i) {
-		i_stack *stack = i_create(2);
+		i_darray *darray = i_create(2);
 		for (j = 0; j < N; ++j)
-			i_push(j, stack);
+			i_push(j, darray);
 		for (j = 0; j < N; ++j)
-			i_pop(stack);
-		i_destroy(stack);
+			i_pop(darray);
+		i_destroy(darray);
 		
 	}
-	printf("code generation stack (int): %.3f sec\n",
+	printf("code generation darray (int): %.3f sec\n",
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 	
 
 	t = clock();
 	for (i = 0; i < M; ++i) {
-		pt_stack *stack = pt_create(2);
+		pt_darray *darray = pt_create(2);
 		for (j = 0; j < N; ++j)
-			pt_push((point){j, j}, stack);
+			pt_push((point){j, j}, darray);
 		for (j = 0; j < N; ++j)
-			pt_pop(stack);
-		pt_destroy(stack);
+			pt_pop(darray);
+		pt_destroy(darray);
 		
 	}
-	printf("code generation stack (point): %.3f sec\n",
+	printf("code generation darray (point): %.3f sec\n",
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 
 
 	t = clock();
 	for (i = 0; i < M; ++i) {
-		int *stack = NULL;
+		int *darray = NULL;
 		for (j = 0; j < N; ++j)
-			fp_push(j, stack);
+			fp_push(j, darray);
 		for (j = 0; j < N; ++j)
-			fp_pop(stack);
-		fp_destroy(stack);
+			fp_pop(darray);
+		fp_destroy(darray);
 		
 	}
-	printf("fat pointer stack (int): %.3f sec\n",
+	printf("fat pointer darray (int): %.3f sec\n",
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 
 
 	t = clock();
 	for (i = 0; i < M; ++i) {
-		point *stack = NULL;
+		point *darray = NULL;
 		for (j = 0; j < N; ++j)
-			fp_push(((point){j, j}), stack);
+			fp_push(((point){j, j}), darray);
 		for (j = 0; j < N; ++j)
-			fp_pop(stack);
-		fp_destroy(stack);
+			fp_pop(darray);
+		fp_destroy(darray);
 		
 	}
-	printf("fat pointer stack (point): %.3f sec\n",
+	printf("fat pointer darray (point): %.3f sec\n",
 		   (float)(clock() - t) / CLOCKS_PER_SEC);
 
 
@@ -82,15 +82,15 @@ void speed_test(void)
 		for (i = 0; i < M; ++i) {
 			/* TODO: better handling of no wanting output */
 			char junk[sizeof(int)];
-			V_Stack *stack = v_create(2, sizeof(int));
+			V_Darray *darray = v_create(2, sizeof(int));
 			for (j = 0; j < N; ++j)
-				v_push(&j, stack);
+				v_push(&j, darray);
 			for (j = 0; j < N; ++j)
-				v_pop(&junk, stack);
-			v_destroy(stack);
+				v_pop(&junk, darray);
+			v_destroy(darray);
 			
 		}
-		printf("void * stack (int): %.3f sec\n",
+		printf("void * darray (int): %.3f sec\n",
 			   (float)(clock() - t) / CLOCKS_PER_SEC);
 	
 	t = clock();
@@ -98,16 +98,16 @@ void speed_test(void)
 			/* TODO: better handling of no wanting output */
 			char junk[sizeof(point)];
 			point jj;
-			V_Stack *stack = v_create(2, sizeof(point));
+			V_Darray *darray = v_create(2, sizeof(point));
 			for (j = 0; j < N; ++j) {
 				jj = (point) {j, j};
-				v_push(&jj, stack);	}
+				v_push(&jj, darray);	}
 			for (j = 0; j < N; ++j)
-				v_pop(&junk, stack);
-			v_destroy(stack);
+				v_pop(&junk, darray);
+			v_destroy(darray);
 			
 		}
-		printf("void * stack (point): %.3f sec\n",
+		printf("void * darray (point): %.3f sec\n",
 			   (float)(clock() - t) / CLOCKS_PER_SEC);
 	
 }
