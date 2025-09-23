@@ -44,7 +44,7 @@
 		int CAPACITY;														\
 		TYPE *DATA;															\
 	};																		\
-typedef struct PREFIX##_stack PREFIX##_stack;
+	typedef struct PREFIX##_stack PREFIX##_stack;
 
 #define MAKE_CREATE(TYPE, PREFIX)											\
 	static PREFIX##_stack *PREFIX##_create(int CAPACITY) {					\
@@ -77,12 +77,12 @@ typedef struct PREFIX##_stack PREFIX##_stack;
 	STACK -> CAPACITY *= 2;
 
 #define MAKE_PUSH(TYPE, PREFIX)												\
-		static void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {		\
-			if (CG_IS_FULL(stack)) {										\
-				CG_ENLARGE(stack, TYPE)										\
-			}																\
-			stack -> DATA[stack -> LENGTH++] = value;						\
-		}
+	static void PREFIX##_push(TYPE value, PREFIX##_stack *stack) {			\
+		if (CG_IS_FULL(stack)) {											\
+			CG_ENLARGE(stack, TYPE)											\
+		}																	\
+		stack -> DATA[stack -> LENGTH++] = value;							\
+	}
 
 /* If the stack is empty, return the empty initialisation of the given
  * type */
