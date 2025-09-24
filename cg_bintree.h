@@ -51,10 +51,6 @@
 	(((bnode->lchild == NULL) && (bnode->rchild == NULL)) ? 1 : 0)
 
 #define CG_NUM_CHILDREN(bnode) 												\
-	(																		\
-	(bnode -> lchild == NULL) ?												\
-	(bnode -> rchild == NULL ? 0 : 1) :										\
-	(bnode -> rchild == NULL ? 1 : 2)										\
-	)
+	((bnode -> lchild != NULL) + (bnode -> rchild != NULL))
 
 #endif
