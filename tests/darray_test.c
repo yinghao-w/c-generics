@@ -90,6 +90,7 @@ void cg_test2(void) {
 	for (int i = 0; i < i_length(darray); i++) {
 		printf("%d\n", i_get(i, darray));
 	}	
+	i_destroy(darray);
 }
 
 void fp_test2(void) {
@@ -113,6 +114,7 @@ void fp_test2(void) {
 	for (int i = 0; i < fp_length(darray); i++) {
 		printf("%d\n", darray[i]);
 	}	
+	fp_destroy(darray);
 }
 
 int main(void) {

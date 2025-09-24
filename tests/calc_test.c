@@ -1,4 +1,4 @@
-/* Calculator program for behaviour testing the stack implementations. */
+/* Calculator program for behaviour testing the darray implementations. */
 
 #include <ctype.h>
 #include <stdio.h>
@@ -20,7 +20,7 @@ char type(char *token) {
 
 }
 
-/* Macro to generate calc function for each stack implementation */
+/* Macro to generate calc function for each darray implementation */
 #define MAKE_CALC(CALC_CREATE, CALC_PUSH, CALC_POP, CALC_DESTROY, PREFIX)	\
 		int PREFIX##_calc(const char *input) {								\
 																			\
@@ -40,57 +40,57 @@ char type(char *token) {
 				switch (type(token)) {										\
 				case NUMBER:												\
 					temp1 = atoi(token);									\
-					CALC_PUSH(temp1, stack);								\
+					CALC_PUSH(temp1, darray);								\
 					break;													\
 				case '+':													\
-					temp1 = CALC_POP(stack) + CALC_POP(stack);				\
-					CALC_PUSH(temp1, stack);								\
+					temp1 = CALC_POP(darray) + CALC_POP(darray);				\
+					CALC_PUSH(temp1, darray);								\
 					break;													\
 				case '-':													\
-					/* subtracts top of stack from second top */			\
-					temp1 = CALC_POP(stack);								\
-					temp2 = CALC_POP(stack);								\
+					/* subtracts top of darray from second top */			\
+					temp1 = CALC_POP(darray);								\
+					temp2 = CALC_POP(darray);								\
 					temp2 -= temp1;											\
-					CALC_PUSH(temp2, stack);								\
+					CALC_PUSH(temp2, darray);								\
 					break;													\
 				case '*':													\
-					temp1 = CALC_POP(stack) * CALC_POP(stack);				\
-					CALC_PUSH(temp1, stack);								\
+					temp1 = CALC_POP(darray) * CALC_POP(darray);				\
+					CALC_PUSH(temp1, darray);								\
 					break;													\
 				case '/':													\
-					temp1 = CALC_POP(stack);								\
+					temp1 = CALC_POP(darray);								\
 					if (temp1 == 0) {										\
 						printf("Error: division by 0\n");					\
 						fprintf(stderr, "Error: division by 0\n");			\
 					}														\
-					temp2 = CALC_POP(stack);								\
+					temp2 = CALC_POP(darray);								\
 					temp2 /= temp1;											\
-					CALC_PUSH(temp2, stack);								\
+					CALC_PUSH(temp2, darray);								\
 					break;													\
 				default:													\
 					break;													\
 				}															\
 				token = strtok(NULL, " ");									\
 			}																\
-			int result = CALC_POP(stack);									\
-			CALC_DESTROY(stack);											\
+			int result = CALC_POP(darray);									\
+			CALC_DESTROY(darray);											\
 			return result;													\
 		}
 
 /* Generate calc functions */
 
 CG_INIT(int, i)
-#define CALC_CREATE i_stack *stack = i_create(2);
+#define CALC_CREATE i_darray *darray = i_create(2);
 MAKE_CALC(CALC_CREATE, i_push, i_pop, i_destroy, cg)
 #undef CALC_CREATE
 
-#define CALC_CREATE int *stack = NULL;
+#define CALC_CREATE int *darray = NULL;
 MAKE_CALC(CALC_CREATE, fp_push, fp_pop, fp_destroy, fp)
 #undef CALC_CREATE
 
-#define CALC_CREATE V_Stack *stack = v_create(2, sizeof(int));
-#define V_PUSH(value, stack) v_push(&value, stack) 
-int v_pop_wrapper(V_Stack *stack) {int x; v_pop(&x, stack); return x;}
+#define CALC_CREATE V_Darray *darray = v_create(2, sizeof(int));
+#define V_PUSH(value, darray) v_push(&value, darray) 
+int v_pop_wrapper(V_Darray *darray) {int x; v_pop(&x, darray); return x;}
 MAKE_CALC(CALC_CREATE, V_PUSH, v_pop_wrapper, v_destroy, v)
 
 void calc_test(void) {
@@ -115,5 +115,5 @@ void calc_test(void) {
 	assert(fp_result == 0);
 	assert(v_result == 0);
 
-	printf("Calculator valid for each stack.\n");
+	printf("Calculator valid for each darray.\n");
 }

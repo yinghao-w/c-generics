@@ -27,31 +27,31 @@ void rand_test(void) {
 	int N = 20000000;
 
 	for (int i = 1; i < M; i++) {
-		i_stack *cg_stack = i_create(1);
-		int *fp_stack = NULL;
-		V_Stack *v_stack = v_create(1, sizeof(int));
+		i_darray *cg_darray = i_create(1);
+		int *fp_darray = NULL;
+		V_Darray *v_darray = v_create(1, sizeof(int));
 
 		int pushes = 0;
 		int pops = 0;
 
 		for (int j = 0; j < N; j++) {
 			if (biased_toss(((float) i) / ((float) M))) {
-				i_push(j, cg_stack);
-				fp_push(j, fp_stack);
-				v_push(&j, v_stack);
+				i_push(j, cg_darray);
+				fp_push(j, fp_darray);
+				v_push(&j, v_darray);
 				pushes++;
 			} else {
 				int p;
-				v_pop(&p, v_stack);
-				assert(p == i_pop(cg_stack));
-				assert(p == fp_pop(fp_stack));
+				v_pop(&p, v_darray);
+				assert(p == i_pop(cg_darray));
+				assert(p == fp_pop(fp_darray));
 				pops++;
 			}
 		}
 
-		i_destroy(cg_stack);
-		fp_destroy(fp_stack);
-		v_destroy(v_stack);
+		i_destroy(cg_darray);
+		fp_destroy(fp_darray);
+		v_destroy(v_darray);
 		printf("Successful test with %.1f push bias: ", ((float) i) / ((float) M));
 		printf("%*d pushes, %*d pops\n", 8, pushes, 8, pops);
 	}
