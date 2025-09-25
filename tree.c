@@ -1,7 +1,13 @@
+#define T_TYPE int
+#define T_PREFIX i
 
+#ifdef T_TYPE
+#ifdef T_PREFIX
+
+#define T_CONCAT_2(A, B) A##B
+#define T_CONCAT(A, B) T_CONCAT_2(A, B)
 
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct Node Node;
 struct Node {
@@ -122,12 +128,17 @@ int check(Node *root, Node **prev, Node **curr, Node **next) {
 #define foreach(node, root)\
 	for(Node *node = NULL, *node##curr = root->parent, *node##next = root; check(root, &node, &node##curr, &node##next); traverse(root, &node, &node##curr, &node##next))
 
+//TODO: implement where instead of curr and next iterator metadata, use a cocnrete Node structure as the metadata
+//can initialise for loop as: for(Node *node, meta;;), node will be Node * but meta will just be Node
 
 void destroy(Node *root) {
 	foreach(node, root) {
 		free(node);
 	}
 }
+
+#endif
+#endif
 
 void test(void) {
 	Node *one = leaf(1);
