@@ -13,19 +13,19 @@ struct pt {char x; char y;};
  *  / \
  * 1   2 */
 void test(void) {
-	Ibt_Bnode *one = Ibt_leaf(1);
-	Ibt_Bnode *two = Ibt_leaf(2);
-	Ibt_Bnode *three = Ibt_join(3, one, two);
-	Ibt_Bnode *four = Ibt_join(4, three, NULL);
+	Ibt_Node *one = Ibt_leaf(1);
+	Ibt_Node *two = Ibt_leaf(2);
+	Ibt_Node *three = Ibt_join(3, one, two);
+	Ibt_Node *four = Ibt_join(4, three, NULL);
 
-	assert(CG_IS_LEAF(one));
-	assert(CG_IS_LEAF(two));
-	assert(!CG_IS_LEAF(three));
-	assert(!CG_IS_LEAF(four));
+	assert(t_is_leaf(one));
+	assert(t_is_leaf(two));
+	assert(!t_is_leaf(three));
+	assert(!t_is_leaf(four));
 
-	assert(CG_NUM_CHILDREN(one) == 0);
-	assert(CG_NUM_CHILDREN(three) == 2);
-	assert(CG_NUM_CHILDREN(four) == 1);
+	assert(t_num_children(one) == 0);
+	assert(t_num_children(three) == 2);
+	assert(t_num_children(four) == 1);
 
 	assert(three -> rchild == two);
 
