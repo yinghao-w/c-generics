@@ -66,100 +66,8 @@ void disconnectc(Node *parent, Node *child) {
 	child->parent = NULL;
 
 }
-/* Table
- *						 State: Previous decision:
- *					|		|up		|left	|right	|
- *					---------------------------------
- *					|up		|3		|2		|1		|
- *					---------------------------------
- *		 Possibility|left	|1		|		|		|
- * 					---------------------------------
- * 					|right	|2		|1		|		|
-*/
 
 #include <stdio.h>
-
-int traverse1(Node *root, Node **curr, Node**next) {
-
-	if ((*curr == root) && (*next == (*curr)->parent)) {
-		return 0;
-	}
-
-	while (1) {
-
-	Node *temp = *next;
-	int exit = 0;
-
-	if (*curr == (*next)->parent) {					// from up
-
-		if ((*next)->lchild != NULL) {				// go left
-			*next = (*next)->lchild;
-		} else if ((*next)->rchild != NULL){		// go right
-			*next = (*next)->rchild;
-		} else if ((*next)->parent != NULL) {		// go up
-			*next = (*next)->parent;
-			exit = 1;
-		}
-
-	} else if (*curr == (*next)->lchild) {			// from left
-
-		if ((*next)->rchild != NULL) {				// go right
-			*next = (*next)->rchild;
-		} else if ((*next)->rchild == NULL){		// go up
-			*next = (*next)->parent;
-			exit = 1;
-		}
-
-	} else if (*curr == (*next)->rchild) {			// from right
-
-		*next = (*next)->parent;					// go up
-		exit = 1;
-	}
-	*curr = temp;
-	if (exit == 1) {break;}
-	}
-	return 1;
-}
-
-#define foreach1(node, root)\
-	for(Node *node = root->parent, *node##next = root; traverse1(root, &node, &node##next);)
-
-// traverse1 works, as does foreach, but not really for destroy. Problem is that the node after next can only be found with info from curr, which is freed. So the:
-// 'next = curr->parent' check to end the loop does not work
-
-void destroy1(Node *node) {
-	foreach1(subnode, node) {
-		free(subnode);
-	}
-}
-
-void func1(void) {
-	Node *one = leaf(1);
-	Node *two = leaf(2);
-	Node *three = join(3, two, NULL);
-	Node *four = join(4, one, three);
-	Node *five = leaf(5);
-	Node *six = join(6, NULL, five);
-	Node *seven = join(7, four, six);
-	foreach1(node, seven) {
-		printf("%d\n", node->value);
-	}
-	foreach1(node, six) {
-		printf("%d\n", node->value);
-	}
-	foreach1(node, three) {
-		printf("%d\n", node->value);
-	}
-	foreach1(node, one) {
-		printf("%d\n", node->value);
-	}
-	int i = 0;
-	foreach1(node, seven) {
-		i++;
-	}
-	printf("\t%d\n", i);
-	destroy1(seven);
-}
 
 void shift(Node **prev, Node **curr, Node **next, Node *new_next) {
 	*prev = *curr;
@@ -167,11 +75,8 @@ void shift(Node **prev, Node **curr, Node **next, Node *new_next) {
 	*next = new_next;
 }
 
-void traverse2(Node *root, Node **prev, Node **curr, Node **next) {
-
-
+void traverse(Node *root, Node **prev, Node **curr, Node **next) {
 	while (1) {
-
 		if ((*curr == NULL) && (*next == NULL)) {
 			*prev = NULL;
 			return;
@@ -207,29 +112,24 @@ void traverse2(Node *root, Node **prev, Node **curr, Node **next) {
 	}
 }
 
-int end2(Node *root, Node **prev, Node **curr, Node **next) {
+int check(Node *root, Node **prev, Node **curr, Node **next) {
 	if ((*prev == NULL) && (*next) == root) {
-		traverse2(root, prev, curr, next);
+		traverse(root, prev, curr, next);
 	}
 	return (*prev != NULL) || (*curr != NULL) || (*next != NULL);
 }
 
-Node *begin2p(Node *root) {
-	Node *node = root;
-	traverse2(root, &node, NULL, NULL);
-	return node;
-}
+#define foreach(node, root)\
+	for(Node *node = NULL, *node##curr = root->parent, *node##next = root; check(root, &node, &node##curr, &node##next); traverse(root, &node, &node##curr, &node##next))
 
-#define foreach2(node, root)\
-	for(Node *node = NULL, *node##curr = root->parent, *node##next = root; end2(root, &node, &node##curr, &node##next); traverse2(root, &node, &node##curr, &node##next))
 
-void destroy2(Node *root) {
-	foreach2(node, root) {
+void destroy(Node *root) {
+	foreach(node, root) {
 		free(node);
 	}
 }
 
-void func2(void) {
+void test(void) {
 	Node *one = leaf(1);
 	Node *two = leaf(2);
 	Node *three = join(3, two, NULL);
@@ -237,52 +137,41 @@ void func2(void) {
 	Node *five = leaf(5);
 	Node *six = join(6, NULL, five);
 	Node *seven = join(7, four, six);
-	foreach2(node, seven) {
+	foreach(node, seven) {
 		printf("%d\n", node->value);
 	}
 	printf("\n\n");
-	foreach2(node, six) {
+	foreach(node, six) {
 		printf("%d\n", node->value);
 	}
 	printf("\n\n");
-	foreach2(node, three) {
+	foreach(node, three) {
 		printf("%d\n", node->value);
 	}
 	printf("\n\n");
-	foreach2(node, one) {
+	foreach(node, one) {
 		printf("%d\n", node->value);
 	}
 	printf("\n\n");
 	int i = 0;
-	foreach2(node, seven) {
+	foreach(node, seven) {
 		i++;
 	}
 	printf("\t%d\n", i);
 	i = 0;
-	foreach2(node, seven) {
-		foreach2(mode, node) {
+	foreach(node, seven) {
+		foreach(mode, node) {
 			i++;
 		}	
 	}
 	printf("\t%d\n", i);
-	destroy2(seven);
+	destroy(seven);
 }
 
 //TODO: research finite state machine implementation of decision tree
 //
-/*
- * int height(Node *node) {
- * 		int max = 0;
- * 		int i = 0;
- * 		foreachnodewithrepeatstraversal(subnode, node) {
- * 			i++ if went down
- * 			i-- if went up
- * 			max = max(max, i)
- * 		}
- * 		return max
- * } */
 
 int main(void) {
-	func2();
+	test();
 	return 0;
 } 
