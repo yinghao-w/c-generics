@@ -9,6 +9,7 @@
 	T_MAKE_LEAF(TYPE, PREFIX)												\
 	T_MAKE_JOIN(TYPE, PREFIX)												\
 	T_MAKE_DESTROY(TYPE, PREFIX)											\
+	T_MAKE_TRAVERSE(TYPE, PREFIX)
 
 #define T_MAKE_NODE(TYPE, PREFIX) 											\
 	typedef struct PREFIX##_Node PREFIX##_Node;								\
@@ -52,5 +53,31 @@
 
 #define t_num_children(node) 												\
 	((node -> lchild != NULL) + (node -> rchild != NULL))
+
+#include "code_gen.h"
+
+#define T_MAKE_TRAVERSE(TYPE, PREFIX)										\
+	CG_INIT(PREFIX##_Node *, PREFIX##_Node)									\
+	/* In order traversal */												\
+	static PREFIX##_Node##_darray *PREFIX##_traverse(PREFIX##_Node *node) {	\
+		if (node == NULL) {													\
+			return NULL;													\
+		}																	\
+		PREFIX##_Node##_darray *stack = PREFIX##_Node##_create(1);			\
+		PREFIX##_Node##_darray *out = PREFIX##_Node##_create(1);			\
+		while ((PREFIX##_Node##_length(stack) > 0) || (node != NULL)) {		\
+			if (node != NULL) {												\
+				PREFIX##_Node##_push(node, stack);							\
+				node = node->lchild;										\
+			} else {														\
+				node = PREFIX##_Node##_pop(stack);							\
+				PREFIX##_Node##_push(node, out);							\
+				node = node->rchild;										\
+			}																\
+		}																	\
+		PREFIX##_Node##_destroy(stack);										\
+		return out;															\
+	}
+
 
 #endif

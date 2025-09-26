@@ -29,7 +29,14 @@ void test(void) {
 
 	assert(three -> rchild == two);
 
+	Ibt_Node_darray *arr = Ibt_traverse(four);
+	assert(Ibt_Node_get(0, arr)->value == 1);
+	assert(Ibt_Node_get(1, arr)->value == 3);
+	assert(Ibt_Node_get(2, arr)->value == 2);
+	assert(Ibt_Node_get(3, arr)->value == 4);
+
 	Ibt_destroy(four);
+	Ibt_Node_destroy(arr);
 }
 
 int main(void) {
