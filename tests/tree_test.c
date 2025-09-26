@@ -31,6 +31,8 @@ void test1(void) {
 	assert(t_is_root(seven));
 	assert(!t_is_root(one));
 	
+	printf("%d\n", it_height(seven));
+	
 	int i = 0;
 	foreach(it_Node, node, seven) {
 		i++;

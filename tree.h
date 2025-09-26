@@ -34,6 +34,7 @@
  * 	this is the implementation of the destructor.
  */
 
+#include <stdio.h>
 #ifdef T_PREFIX
 #ifdef T_TYPE
 
@@ -104,17 +105,16 @@ static void T_CONCAT(T_PREFIX, disconnectc)(P_Node *parent, P_Node *child) {
 
 #define t_shift(prev, curr, next, new_next) 	(*prev = *curr, *curr = *next, *next = new_next)
 
-static void T_CONCAT(P_Node, traverse)(P_Node *root, P_Node **prev, P_Node **curr, P_Node **next) {
-	while (1) {
+int T_CONCAT(P_Node, single_traverse)(P_Node *root, P_Node **prev, P_Node **curr, P_Node **next) {
 		if ((*curr == NULL) && (*next == NULL)) {
 			*prev = NULL;
-			return;
+			return 0;
 
 		} else if (*next == root->parent) {
 			*prev = root;
 			*curr = NULL;
 			*next = NULL;
-			return;
+			return 0;
 
 		} else if ((*next)->parent == *curr) {
 			if ((*next)->lchild != NULL) {
@@ -131,13 +131,20 @@ static void T_CONCAT(P_Node, traverse)(P_Node *root, P_Node **prev, P_Node **cur
 			} else if (1) {
 				t_shift(prev, curr, next, (*next)->parent);
 			}
-			return;
+			return 0;
 
 		} else if (1) {
 			t_shift(prev, curr, next, (*next)->parent);
-			return;
+			return 0;
 
 		}
+		return 1;
+}
+
+static void T_CONCAT(P_Node, traverse)(P_Node *root, P_Node **prev, P_Node **curr, P_Node **next) {
+	int flag = 1;
+	while (flag) {
+		flag = T_CONCAT(P_Node, single_traverse)(root, prev, curr, next);
 	}
 }
 
@@ -146,6 +153,19 @@ static int T_CONCAT(P_Node, check)(P_Node *root, P_Node **prev, P_Node **curr, P
 		T_CONCAT(P_Node,traverse)(root, prev, curr, next);
 	}
 	return (*prev != NULL) || (*curr != NULL) || (*next != NULL);
+}
+
+static int T_CONCAT(T_PREFIX, height)(P_Node *root) {
+	P_Node *prev = NULL;
+	P_Node *curr = root->parent;
+	P_Node *next = root;
+	int i = 0;
+	int max = 0;
+	while (next != root->parent) {
+		i += T_CONCAT(P_Node, single_traverse)(root, &prev, &curr, &next) ? 1 : -1;
+		max = (i > max ? i : max);
+	}
+	return max - 1;
 }
 
 #define foreach(type, node, root)												\
