@@ -28,6 +28,7 @@ struct fp_header {
 };
 typedef struct fp_header fp_header;
 
+/* TODO: do null checks before accessing fp_header, or change initialisation */
 #define fp_destroy(darray) (													\
 		free (FP_HEADER(darray))												\
 		)
@@ -38,7 +39,7 @@ typedef struct fp_header fp_header;
 
 /* TODO: Use this macro elsewhere in this file */
 #define fp_length(darray) (\
-		FP_HEADER(darray) -> length\
+		(darray == NULL) ? (0) : (FP_HEADER(darray) -> length)\
 		)
 
 #define FP_IS_FULL(darray) (													\

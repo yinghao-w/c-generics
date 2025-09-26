@@ -105,7 +105,7 @@ static void T_CONCAT(T_PREFIX, disconnectc)(P_Node *parent, P_Node *child) {
 
 #define t_shift(prev, curr, next, new_next) 	(*prev = *curr, *curr = *next, *next = new_next)
 
-int T_CONCAT(P_Node, single_traverse)(P_Node *root, P_Node **prev, P_Node **curr, P_Node **next) {
+static int T_CONCAT(P_Node, single_traverse)(P_Node *root, P_Node **prev, P_Node **curr, P_Node **next) {
 		if ((*curr == NULL) && (*next == NULL)) {
 			*prev = NULL;
 			return 0;
