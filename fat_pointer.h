@@ -28,14 +28,10 @@ struct fp_header {
 };
 typedef struct fp_header fp_header;
 
-/* TODO: do null checks before accessing fp_header, or change initialisation */
-#define fp_destroy(darray) (													\
-		free (FP_HEADER(darray))												\
-		)
+/* TODO: unified handling of popping/deleting empty arrays and wrong indexes */ 
+#define fp_destroy(darray) ((darray == NULL) ? 0 : free(FP_HEADER(darray)))
 
-#define FP_HEADER(darray) (													\
-		(fp_header *)darray - 1												\
-		)
+#define FP_HEADER(darray) ((fp_header *)darray - 1)
 
 /* TODO: Use this macro elsewhere in this file */
 #define fp_length(darray) (\
