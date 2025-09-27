@@ -83,21 +83,11 @@ static P_Node *T_CONCAT(T_PREFIX, join)(T_TYPE value, P_Node *lchild, P_Node *rc
 
 #define t_num_children(node) ((node->lchild != NULL) + (node->rchild != NULL))
 
-static void T_CONCAT(T_PREFIX, disconnectn)(P_Node *parent, int child) {
-	if (child == 0) {
-		parent->lchild->parent = NULL;
-		parent ->lchild = NULL;
-	} else if (child == 1) {
-		parent->rchild->parent = NULL;
-		parent ->rchild = NULL;
-	}
-}
-
-static void T_CONCAT(T_PREFIX, disconnectc)(P_Node *parent, P_Node *child) {
-	if (parent->lchild == child) {
-		parent->lchild = NULL;
-	} else if (parent->rchild == child) {
-		parent->rchild = NULL;
+static void T_CONCAT(T_PREFIX, detach)(P_Node *node) {
+	if (node->parent->lchild == node) {
+		node->parent->lchild = NULL;
+	} else if (node->parent->rchild == node) {
+		node->parent->rchild = NULL;
 	}
 	child->parent = NULL;
 
