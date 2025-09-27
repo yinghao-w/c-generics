@@ -83,18 +83,20 @@ static P_Node *T_CONCAT(T_PREFIX, join)(T_TYPE value, P_Node *lchild, P_Node *rc
 
 #define t_num_children(node) ((node->lchild != NULL) + (node->rchild != NULL))
 
+/* Detach node from its parent */
 static void T_CONCAT(T_PREFIX, detach)(P_Node *node) {
 	if (node->parent->lchild == node) {
 		node->parent->lchild = NULL;
 	} else if (node->parent->rchild == node) {
 		node->parent->rchild = NULL;
 	}
-	child->parent = NULL;
+	node->parent = NULL;
 
 }
 
 #define t_shift(prev, curr, next, new_next) 	(*prev = *curr, *curr = *next, *next = new_next)
 
+/* Returns 0 is *prev is to be visited now, 0 if it is to be skipped for later */
 static int T_CONCAT(P_Node, single_traverse)(P_Node *root, P_Node **prev, P_Node **curr, P_Node **next) {
 		if ((*curr == NULL) && (*next == NULL)) {
 			*prev = NULL;
@@ -160,14 +162,33 @@ static int T_CONCAT(T_PREFIX, height)(P_Node *root) {
 
 #define foreach(type, node, root)												\
 	for(type *node = NULL, *node##curr = root->parent, *node##next = root;		\
-			T_CONCAT(type, check)(root, &node, &node##curr, &node##next);						\
-			T_CONCAT(type, traverse)(root, &node, &node##curr, &node##next))
+		T_CONCAT(type, check)(root, &node, &node##curr, &node##next);						\
+		T_CONCAT(type, traverse)(root, &node, &node##curr, &node##next))
 
 static void T_CONCAT(T_PREFIX, destroy)(P_Node *root) {
 	foreach(P_Node, node, root) {
 		free(node);
 	}
 }
+
+/* Compares if two trees have the same values. Takes a function pointer which
+ * compares two T_TYPE values, returns 1 if the same, 0 if different. */
+static int T_CONCAT(T_PREFIX, is_equal)(P_Node *root1, P_Node *root2, int (*val_is_equal)(T_TYPE, T_TYPE)) {
+	/* if both nodes are null: */
+	if (!root1 && !root2) {
+		return 1;
+	/* one of them is null */
+	} else if (!root1 || !root2) {
+		return 0;
+	/* values differ */
+	} else if (!(*val_is_equal)(root1->value, root2->value)) {
+		return 0;
+	} else {
+		return T_CONCAT(T_PREFIX, is_equal)(root1->lchild, root2->lchild, val_is_equal) && T_CONCAT(T_PREFIX, is_equal)(root1->lchild, root2->lchild, val_is_equal)
+	}
+
+}
+
 #undef T_TYPE
 #undef T_PREFIX
 
