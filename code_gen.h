@@ -59,9 +59,6 @@
     return p;                                                                  \
   }
 
-/* If the data consists of pointers, the underlying memory to which are
- * pointed are not freed. For wide applicablity need the user to supply
- * custom destructors TODO: */
 #define MAKE_DESTROY(TYPE, PREFIX)                                             \
   static void PREFIX##_destroy(PREFIX##_darray *darray) {                      \
     free(darray->DATA);                                                        \
@@ -87,17 +84,11 @@
     darray->DATA[darray->LENGTH++] = value;                                    \
   }
 
-/* If the darray is empty, return the empty initialisation of the given
- * type */
 #define MAKE_POP(TYPE, PREFIX)                                                 \
   static TYPE PREFIX##_pop(PREFIX##_darray *darray) {                          \
-    if (darray->LENGTH == 0) {                                                 \
-      return (TYPE){0};                                                        \
-    }                                                                          \
     return darray->DATA[--darray->LENGTH];                                     \
   }
 
-/* TODO: decide on behaviour when index > length */
 #define MAKE_INSERT(TYPE, PREFIX)                                              \
   static void PREFIX##_insert(TYPE value, int index,                           \
                               PREFIX##_darray *darray) {                       \
@@ -110,7 +101,6 @@
     darray->DATA[index] = value;                                               \
   }
 
-/* TODO: decide on behaviour when index > length */
 #define MAKE_DELETE(TYPE, PREFIX)                                              \
   static TYPE PREFIX##_delete(int index, PREFIX##_darray *darray) {            \
     TYPE value = darray->DATA[index];                                          \
@@ -120,7 +110,6 @@
     return value;                                                              \
   }
 
-/* TODO: decide on behaviour when index > length */
 #define MAKE_GET(TYPE, PREFIX)                                                 \
   static TYPE PREFIX##_get(int index, const PREFIX##_darray *darray) {         \
     return darray->DATA[index];                                                \
