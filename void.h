@@ -1,4 +1,4 @@
- /* this allows concrete data type elements. */
+/* this allows concrete data type elements. */
 
 #ifndef VOID_H
 
