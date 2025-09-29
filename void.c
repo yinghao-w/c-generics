@@ -45,37 +45,13 @@ void v_push(const void *value, V_Darray *darray) {
   darray->length++;
 }
 
-/* TODO: Consider case when output value is not needed, eg pass NULL */
 void v_pop(void *value, V_Darray *darray) {
-  if (darray->length == 0) {
-    memset(value, 0, darray->element_size);
-  } else {
+  if (value) {
     memcpy(value, darray->data + darray->element_size * (darray->length - 1),
            darray->element_size);
-    darray->length--;
   }
+  darray->length--;
 }
-
-/*
- * 				EMPTY STACK
- *NONEMPTY
- * -------------------------------------------------------------------------------------------
- *  OUTPUT	|	memset value to 0
- *memset value to darray pos - 1 |
- *darray length--
- *			|
- *			|
- *			|
- *			|
- * ------------------------------------------------------------------------------------------
- *  NO		|	do nothing
- *darray length-- OUTPUT	|
- *			|
- *			|
- *			|
- *			|
- *			|
- */
 
 void v_insert(const void *value, int index, V_Darray *darray) {
   if (v_is_full(darray)) {
@@ -90,8 +66,10 @@ void v_insert(const void *value, int index, V_Darray *darray) {
 }
 
 void v_delete(void *value, int index, V_Darray *darray) {
-  memcpy(value, darray->data + darray->element_size * index,
-         darray->element_size);
+  if (value) {
+    memcpy(value, darray->data + darray->element_size * index,
+           darray->element_size);
+  }
   memmove(darray->data + darray->element_size * index,
           darray->data + darray->element_size * (index + 1),
           darray->element_size * darray->length - index - 1);

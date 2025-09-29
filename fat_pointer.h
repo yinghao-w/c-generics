@@ -19,15 +19,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* TODO: use size_t to ensure alignment. Tests haven't been able to find
- * any odd behaviour with strict alignment long doubles, but to be safe. */
+/* TODO: use size_t to ensure alignment. Tests haven't been able to find any odd
+ * behaviour with strict alignment long doubles, but to be safe. */
 struct fp_header {
   int length;
   int capacity;
 };
 typedef struct fp_header fp_header;
 
-/* TODO: unified handling of popping/deleting empty arrays and wrong indexes */
 #define fp_destroy(darray) ((darray == NULL) ? 0 : free(FP_HEADER(darray)))
 
 #define FP_HEADER(darray) ((fp_header *)darray - 1)
@@ -65,24 +64,18 @@ static void *fp_init(int element_size) {
 
 #define FP_ENLARGE(darray) (darray = fp_enlarge(darray, sizeof(*darray)))
 
-/* Initialises the darray as empty if required. If the darray is empty, zeroes
- * the first element of the array and evaluates it. */
-#define fp_pop(darray)                                                         \
-  (((darray == NULL) ? FP_INIT(darray) : (0)),                                 \
-   ((FP_HEADER(darray)->length == 0)                                           \
-        ? (memset(darray, 0, sizeof(*darray)), darray[0])                      \
-        : (darray[--(FP_HEADER(darray)->length)])))
+#define fp_pop(darray) (darray[--(FP_HEADER(darray)->length)])
 
 #define fp_insert(value, index, darray)                                        \
   (((darray == NULL) ? (FP_INIT(darray))                                       \
-                     : ((FP_IS_FULL(darray)) ? (FP_ENLARGE(darray)) : (0))),   \
+                     : ((FP_IS_FULL(darray)) ? (FP_ENLARGE(darray)) : 0)),     \
    memmove(darray + index + 1, darray + index,                                 \
            sizeof(*darray) * (FP_HEADER(darray)->length - index)),             \
-   FP_HEADER(darray)->length++, darray[index] = value, 0)
+   FP_HEADER(darray)->length++, darray[index] = value)
 
 #define fp_delete(index, darray)                                               \
   (memmove(darray + index, darray + index + 1,                                 \
            sizeof(*darray) * (FP_HEADER(darray)->length - index - 1)),         \
-   --FP_HEADER(darray)->length, 0)
+   --FP_HEADER(darray)->length)
 
 #endif
