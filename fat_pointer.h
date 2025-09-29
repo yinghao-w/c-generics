@@ -27,7 +27,7 @@ struct fp_header {
 };
 typedef struct fp_header fp_header;
 
-#define fp_destroy(darray) ((darray == NULL) ? 0 : free(FP_HEADER(darray)))
+#define fp_destroy(darray) ((darray == NULL) ? 0 : (free(FP_HEADER(darray)), 0))
 
 #define FP_HEADER(darray) ((fp_header *)darray - 1)
 
