@@ -191,8 +191,8 @@ static int T_CONCAT(T_PREFIX, is_equal)(P_Node *root1, P_Node *root2,
   } else {
     return T_CONCAT(T_PREFIX, is_equal)(root1->lchild, root2->lchild,
                                         val_is_equal) &&
-           T_CONCAT(T_PREFIX, is_equal)(root1->lchild, root2->lchild,
-                                        val_is_equal)
+           T_CONCAT(T_PREFIX, is_equal)(root1->rchild, root2->rchild,
+                                        val_is_equal);
   }
 }
 
