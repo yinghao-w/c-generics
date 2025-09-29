@@ -59,7 +59,7 @@ void v_insert(const void *value, int index, V_Darray *darray) {
   }
   memmove(darray->data + darray->element_size * (index + 1),
           darray->data + darray->element_size * index,
-          darray->element_size * darray->length - index);
+          darray->element_size * (darray->length - index));
   darray->length++;
   memcpy(darray->data + darray->element_size * index, value,
          darray->element_size);
@@ -72,7 +72,7 @@ void v_delete(void *value, int index, V_Darray *darray) {
   }
   memmove(darray->data + darray->element_size * index,
           darray->data + darray->element_size * (index + 1),
-          darray->element_size * darray->length - index - 1);
+          darray->element_size * (darray->length - index - 1));
   darray->length--;
 }
 
