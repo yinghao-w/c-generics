@@ -1,4 +1,4 @@
-#include "../cg_bintree.h"
+#include "../cg_tree.h"
 #include <assert.h>
 #include <stdio.h>
 
