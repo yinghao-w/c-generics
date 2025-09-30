@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -std=c99 -g -Wall -Wextra -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict -Wnull-dereference -Wjump-misses-init -Wdouble-promotion -Wshadow -Wpedantic -Wstrict-aliasing -Wcast-align=strict
-INCLUDE=-I ..
+INCLUDE = -I ..
+BENCH_INC = -I ../../stb -I ../../klib
 
 USE_IMPLS = USE_CODE_GEN USE_FAT_POINTER USE_VOID
 
@@ -29,7 +30,7 @@ run: $(OUTPUTS)
 	@./rand_test.out
 
 benchmark: benchmark.c ../void.c
-	@$(CC) $(CFLAGS) $(INCLUDE) -o $@.out benchmark.c ../void.c
+	@$(CC) $(CFLAGS) $(INCLUDE) $(BENCH_INC) -o $@.out benchmark.c ../void.c
 	./benchmark.out
 
 clean:

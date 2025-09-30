@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../code_gen.h"
-#include "../fat_pointer.h"
-#include "../void.h"
+#include "code_gen.h"
+#include "fat_pointer.h"
+#include "void.h"
 
 CG_INIT(int, i)
 

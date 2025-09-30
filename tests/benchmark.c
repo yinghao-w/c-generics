@@ -10,10 +10,10 @@ CG_INIT(int, i)
 #include "fat_pointer.h"
 #include "void.h"
 
-#include "../../klib/kvec.h"
+#include "kvec.h"
 
 #define STB_DS_IMPLEMENTATION
-#include "../../stb/stb_ds.h"
+#include "stb_ds.h"
 
 void speed_test(void) {
   int M = 10, N = 20000000, i, j;
