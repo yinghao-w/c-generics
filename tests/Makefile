@@ -9,24 +9,24 @@ USE_IMPLS = USE_CODE_GEN USE_FAT_POINTER USE_VOID
 
 all: tests run
 
-tests: units fuzz
+tests: units rand
 	@echo All tests compiled. Run with "make run".
 
 units: $(USE_IMPLS)
 
 $(USE_IMPLS):
-	@$(CC) $(CFLAGS) $(INCLUDE) -D $@ -D POINT -o $@_POINT.out unified.c ../void.c
-	@$(CC) $(CFLAGS) $(INCLUDE) -D $@ -D LONG_DOUBLE -o $@_LONG_DOUBLE.out unified.c ../void.c
-	@$(CC) $(CFLAGS) $(INCLUDE) -D $@ -o $@_INT.out unified.c ../void.c
+	@$(CC) $(CFLAGS) $(INCLUDE) -D $@ -D POINT -o $@_POINT.out unit_tests.c ../void.c
+	@$(CC) $(CFLAGS) $(INCLUDE) -D $@ -D LONG_DOUBLE -o $@_LONG_DOUBLE.out unit_tests.c ../void.c
+	@$(CC) $(CFLAGS) $(INCLUDE) -D $@ -o $@_INT.out unit_tests.c ../void.c
 
-fuzz: fuzz.c
-	@$(CC) $(CFLAGS) $(INCLUDE) -o $@.out fuzz.c ../void.c
+rand: rand_test.c
+	@$(CC) $(CFLAGS) $(INCLUDE) -o $@_test.out rand_test.c ../void.c
 
 OUTPUTS = $(wildcard USE*.out)
 
 run: $(OUTPUTS)
 	@$(foreach f, $^, ./$(f);)
-	@./fuzz.out
+	@./rand_test.out
 
 benchmark: benchmark.c ../void.c
 	@$(CC) $(CFLAGS) $(INCLUDE) -o $@.out benchmark.c ../void.c

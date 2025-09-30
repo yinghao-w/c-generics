@@ -63,7 +63,7 @@ void fuzz_test(void) {
     fp_destroy(fp_darray);
     v_destroy(v_darray);
   }
-  printf("Successful fuzz test.\n");
+  printf("Successful random operations test.\n");
 }
 
 int main(void) {
