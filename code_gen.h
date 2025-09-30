@@ -22,6 +22,9 @@
  * pt r = pt_pop(my_darray);
  */
 
+/* TODO: does not allow creating an arrow with 0 capacity, no init checking in
+ * push */
+
 #ifndef CODE_GEN_H
 
 #define CODE_GEN_H
