@@ -1,25 +1,17 @@
-/* darray implementation by code generating macros
- * uses macro CG_INIT(TYPE, PREFIX to generate all the definitions for a
- * dynamic array structure and darray operations for the specific TYPE, label
- * the structure and operation with PREFIX */
-
-/*
- * example darray for type 'point':
+/* Generic dynamic array implementation with code generation macros.
  *
- * generate all necessary code:
+ * Use:
  *
- * CG_INIT(point, pt)
+ * 		#include "code_gen.h"
  *
- * initialise darray:
+ * 	Generate all definitions necessary for a specific type, with definitions
+ * and functions prefixed:
  *
- * pt_darray *my_darray = pt_create(10);
+ * 		CG_INIT(int, i)
  *
- * operations:
+ * 	Initialise array:
  *
- * point p, q;
- * pt_push(p, my_darray);
- * pt_push(q, my_darray);
- * pt r = pt_pop(my_darray);
+ * 		i_darray *a = i_create(10);
  */
 
 /* TODO: does not allow creating an arrow with 0 capacity, no init checking in

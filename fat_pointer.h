@@ -1,15 +1,15 @@
-/* Darray implementation with the 'fat pointer' or 'stretchy buffer' method
+/* Generic dynamic array implementation with the 'fat pointer' or 'stretchy
+ * buffer' method. The data is stored in a regular array owned by the handle
+ * pointer, while the metadata of size and capacity is stored in the memory
+ * location behind the pointer.
  *
- * The data is stored in a regular array owned by the handle pointer, while the
- * metadata of size and capacity is stored in the memory location behind the
- * pointer.
+ * Use:
  *
- * Usage:
- * int *darray = NULL;
- * fp_push(1, darray);
- * fp_push(2, darray);
- * fp_pop(darray);		<- returns 2
- * fp_destroy(darray);
+ * 		#include "fat_pointer.h"
+ *
+ * Initialise:
+ *
+ * 		int *darray = NULL;
  */
 
 #ifndef FAT_POINTER_H
