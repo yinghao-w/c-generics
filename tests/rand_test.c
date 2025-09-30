@@ -1,56 +1,70 @@
-/* Applies push and pop operations in a pseudorandom order, with varying
- * probability of each operation. Asserts that the popped values are
- * identical. */
+/* Applies a pseudo-random series of pushes, pops, inserts, and deletes on each
+ * array. The operation and value of each array is the same. After each
+ * operation the arrays are compared to one another. */
 
 #include <assert.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-#include "code_gen.h"
-#include "fat_pointer.h"
-#include "void.h"
+#include "../code_gen.h"
+#include "../fat_pointer.h"
+#include "../void.h"
 
 CG_INIT(int, i)
 
-/* For a  bias between 0 and 1, returns 1 with pseudo-probability = bias, and 0
- * otherwise */
-int biased_toss(float bias) { return ((float)rand() / (RAND_MAX) < bias); }
+void rand_test_new(void) {
+  srand(1444 * 1337);
+  int M = 5;
+  int N = 2000;
 
-void rand_test(void) {
-
-  /* Initialises pseudo-random seed. */
-  srand(time(NULL));
-  int M = 10;
-  int N = 20000000;
-
-  for (int i = 1; i < M; i++) {
+  for (int i = 0; i < M; i++) {
     i_darray *cg_darray = i_create(1);
     int *fp_darray = NULL;
     V_Darray *v_darray = v_create(1, sizeof(int));
 
-    int pushes = 0;
-    int pops = 0;
-
     for (int j = 0; j < N; j++) {
-      if (biased_toss(((float)i) / ((float)M))) {
+      int op = rand() % 4;
+
+      if (i_length(cg_darray) == 0 || op == 0) {
         i_push(j, cg_darray);
         fp_push(j, fp_darray);
         v_push(&j, v_darray);
-        pushes++;
+      } else if (op == 1) {
+        int cg, fp, v;
+        cg = i_pop(cg_darray);
+        fp = fp_pop(fp_darray);
+        v_pop(&v, v_darray);
+        assert(cg == fp);
+        assert(cg == v);
+      } else if (op == 2) {
+        int index = rand() % i_length(cg_darray);
+        i_insert(j, index, cg_darray);
+        fp_insert(j, index, fp_darray);
+        v_insert(&j, index, v_darray);
       } else {
-        int p;
-        v_pop(&p, v_darray);
-        assert(p == i_pop(cg_darray));
-        assert(p == fp_pop(fp_darray));
-        pops++;
+        int index = rand() % i_length(cg_darray);
+        i_delete(index, cg_darray);
+        fp_delete(index, fp_darray);
+        v_delete(NULL, index, v_darray);
+      }
+
+      assert(i_length(cg_darray) == fp_length(fp_darray));
+      assert(i_length(cg_darray) == v_length(v_darray));
+
+      for (int k = 0; k < i_length(cg_darray); k++) {
+        assert(i_get(k, cg_darray) == fp_darray[k]);
+        int v;
+        v_get(&v, k, v_darray);
+        assert(i_get(k, cg_darray) == v);
       }
     }
 
     i_destroy(cg_darray);
     fp_destroy(fp_darray);
     v_destroy(v_darray);
-    printf("Successful test with %.1f push bias: ", ((float)i) / ((float)M));
-    printf("%*d pushes, %*d pops\n", 8, pushes, 8, pops);
   }
+}
+
+int main(void) {
+  rand_test_new();
+  return 0;
 }
