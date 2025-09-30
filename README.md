@@ -17,7 +17,7 @@ There is no index bounds checking.
 
 ## Current implementation methods:
 
-- void ** pointers
+- void * pointers
 - code generation
 - template instantiation
 - fat pointers (stretchy buffers)

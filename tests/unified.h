@@ -12,6 +12,13 @@ struct point {
 #define U_GET_INT(I, A) U_GET(I, A).x
 #endif
 
+#ifdef LONG_DOUBLE
+#define U_TYPE long double
+#define U_MAKE(I) I
+#define U_POP_INT(A) U_POP(A)
+#define U_GET_INT(I, A) U_GET(I, A)
+#endif
+
 #ifndef U_TYPE
 #define U_TYPE int
 #define U_MAKE(I) I

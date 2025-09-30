@@ -9,8 +9,6 @@
 
 */
 
-#define POINT
-#define USE_CODE_GEN
 #include "unified.h"
 
 void create_destroy_test(void) {
@@ -76,6 +74,7 @@ void tests(void) {
   push_pop_test();
   insert_test();
   delete_test();
+  printf("\n");
 }
 
 int main(void) {

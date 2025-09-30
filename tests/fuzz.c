@@ -3,6 +3,7 @@
  * operation the arrays are compared to one another. */
 
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "../code_gen.h"
@@ -11,7 +12,7 @@
 
 CG_INIT(int, i)
 
-void rand_test_new(void) {
+void fuzz_test(void) {
   srand(1444 * 1337);
   int M = 5;
   int N = 2000;
@@ -62,9 +63,10 @@ void rand_test_new(void) {
     fp_destroy(fp_darray);
     v_destroy(v_darray);
   }
+  printf("Successful fuzz test.\n");
 }
 
 int main(void) {
-  rand_test_new();
+  fuzz_test();
   return 0;
 }
