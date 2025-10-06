@@ -3,13 +3,13 @@
 #include <string.h>
 
 struct V_Darray {
-  int length;
-  int capacity;
-  int element_size;
+  size_t length;
+  size_t capacity;
+  size_t element_size;
   char *data;
 };
 
-V_Darray *v_create(int capacity, int element_size) {
+V_Darray *v_create(size_t capacity, size_t element_size) {
   V_Darray *p = malloc(sizeof(*p));
   p->capacity = capacity;
   p->length = 0;
@@ -18,22 +18,27 @@ V_Darray *v_create(int capacity, int element_size) {
   return p;
 }
 
-/* destroys the darray  and the objects to which its data pointed */
+/* Destroys the darray  and the objects to which its data pointed. */
 void v_destroy(V_Darray *darray) {
   free(darray->data);
   free(darray);
 }
 
-int v_length(const V_Darray *darray) { return darray->length; }
+size_t v_length(const V_Darray *darray) { return darray->length; }
 
 static int v_is_full(const V_Darray *darray) {
   return (darray->length >= darray->capacity) ? 1 : 0;
 }
 
 static void v_enlarge(V_Darray *darray) {
-  darray->data =
-      realloc(darray->data, 2 * darray->capacity * darray->element_size);
-  darray->capacity *= 2;
+  if (darray->capacity == 0) {
+    darray->data = malloc(darray->element_size);
+    darray->capacity = 1;
+  } else {
+    darray->data =
+        realloc(darray->data, 2 * darray->capacity * darray->element_size);
+    darray->capacity *= 2;
+  }
 }
 
 void v_push(const void *value, V_Darray *darray) {
@@ -53,7 +58,7 @@ void v_pop(void *value, V_Darray *darray) {
   darray->length--;
 }
 
-void v_insert(const void *value, int index, V_Darray *darray) {
+void v_insert(const void *value, size_t index, V_Darray *darray) {
   if (v_is_full(darray)) {
     v_enlarge(darray);
   }
@@ -65,7 +70,7 @@ void v_insert(const void *value, int index, V_Darray *darray) {
          darray->element_size);
 }
 
-void v_delete(void *value, int index, V_Darray *darray) {
+void v_delete(void *value, size_t index, V_Darray *darray) {
   if (value) {
     memcpy(value, darray->data + darray->element_size * index,
            darray->element_size);
@@ -76,7 +81,7 @@ void v_delete(void *value, int index, V_Darray *darray) {
   darray->length--;
 }
 
-void v_get(void *value, int index, const V_Darray *darray) {
+void v_get(void *value, size_t index, const V_Darray *darray) {
   memcpy(value, darray->data + darray->element_size * index,
          darray->element_size);
 }

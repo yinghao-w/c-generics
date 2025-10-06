@@ -37,20 +37,22 @@
 
 #define VOID_H
 
+#include <stdlib.h>
+
 struct V_Darray;
 typedef struct V_Darray V_Darray;
 
-V_Darray *v_create(int capacity, int element_size);
+V_Darray *v_create(size_t capacity, size_t element_size);
 void v_destroy(V_Darray *darray);
 
-int v_length(const V_Darray *darray);
+size_t v_length(const V_Darray *darray);
 
 void v_push(const void *value, V_Darray *darray);
 void v_pop(void *value, V_Darray *darray);
 
-void v_insert(const void *value, int index, V_Darray *darray);
-void v_delete(void *value, int index, V_Darray *darray);
+void v_insert(const void *value, size_t index, V_Darray *darray);
+void v_delete(void *value, size_t index, V_Darray *darray);
 
-void v_get(void *value, int index, const V_Darray *darray);
+void v_get(void *value, size_t index, const V_Darray *darray);
 
 #endif
