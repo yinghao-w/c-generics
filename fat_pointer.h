@@ -34,41 +34,37 @@ typedef struct fp_header fp_header;
 /* TODO: Use this macro elsewhere in this file */
 #define fp_length(darray) ((darray == NULL) ? (0) : (FP_HEADER(darray)->length))
 
+#define FP_LENGTH(darray) (FP_HEADER(darray)->length)
+#define FP_CAPACITY(darray) (FP_HEADER(darray)->capacity)
+
 #define FP_IS_FULL(darray)                                                     \
   ((FP_HEADER(darray)->length >= FP_HEADER(darray)->capacity) ? (1) : (0))
 
+static void *fp_resize(void *darray, int element_size) {
+  if (darray) {
+    fp_header *p = realloc(FP_HEADER(darray),
+                           2 * FP_HEADER(darray)->capacity * element_size +
+                               sizeof(fp_header));
+    p->capacity *= 2;
+    return ++p;
+  } else {
+    fp_header *p = malloc(element_size + sizeof(fp_header));
+    p->length = 0;
+    p->capacity = 1;
+    return ++p;
+  }
+}
+
+#define FP_RESIZE(darray) (darray = fp_resize(darray, sizeof(*darray)))
+
 #define fp_push(value, darray)                                                 \
-  (((darray == NULL) ? (FP_INIT(darray))                                       \
-                     : ((FP_IS_FULL(darray)) ? (FP_ENLARGE(darray)) : (0))),   \
+  (!darray || FP_IS_FULL(darray) ? FP_RESIZE(darray) : 0,                      \
    darray[FP_HEADER(darray)->length++] = value)
-
-/* TODO: unify enlarge and init into a single function */
-static void *fp_enlarge(void *darray, int element_size) {
-  int length = FP_HEADER(darray)->length;
-  int capacity = FP_HEADER(darray)->capacity;
-  fp_header *p = realloc(FP_HEADER(darray),
-                         2 * capacity * element_size + sizeof(fp_header));
-  p->length = length;
-  p->capacity = 2 * capacity;
-  return ++p;
-}
-
-static void *fp_init(int element_size) {
-  fp_header *p = malloc(element_size + sizeof(fp_header));
-  p->length = 0;
-  p->capacity = 1;
-  return ++p;
-}
-
-#define FP_INIT(darray) (darray = fp_init(sizeof(*darray)))
-
-#define FP_ENLARGE(darray) (darray = fp_enlarge(darray, sizeof(*darray)))
 
 #define fp_pop(darray) (darray[--(FP_HEADER(darray)->length)])
 
 #define fp_insert(value, index, darray)                                        \
-  (((darray == NULL) ? (FP_INIT(darray))                                       \
-                     : ((FP_IS_FULL(darray)) ? (FP_ENLARGE(darray)) : 0)),     \
+  (!darray || FP_IS_FULL(darray) ? FP_RESIZE(darray) : 0,                      \
    memmove(darray + index + 1, darray + index,                                 \
            sizeof(*darray) * (FP_HEADER(darray)->length - index)),             \
    FP_HEADER(darray)->length++, darray[index] = value)
