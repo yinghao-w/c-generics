@@ -36,40 +36,40 @@
 
 #define MAKE_STRUCT(TYPE, PREFIX)                                              \
   typedef struct {                                                             \
-    size_t LENGTH;                                                             \
-    size_t CAPACITY;                                                           \
-    TYPE *DATA;                                                                \
+    size_t length;                                                             \
+    size_t capacity;                                                           \
+    TYPE *data;                                                                \
   } PREFIX##_darray;
 
 #define MAKE_CREATE(TYPE, PREFIX)                                              \
-  static PREFIX##_darray *PREFIX##_create(size_t CAPACITY) {                   \
+  static PREFIX##_darray *PREFIX##_create(size_t capacity) {                   \
     PREFIX##_darray *p = malloc(sizeof(*p));                                   \
-    p->LENGTH = 0;                                                             \
-    p->CAPACITY = CAPACITY;                                                    \
-    p->DATA = malloc(CAPACITY * sizeof(TYPE));                                 \
+    p->length = 0;                                                             \
+    p->capacity = capacity;                                                    \
+    p->data = malloc(capacity * sizeof(TYPE));                                 \
     return p;                                                                  \
   }
 
 #define MAKE_DESTROY(TYPE, PREFIX)                                             \
   static void PREFIX##_destroy(PREFIX##_darray *darray) {                      \
-    free(darray->DATA);                                                        \
+    free(darray->data);                                                        \
     free(darray);                                                              \
   }
 
 #define MAKE_LENGTH(TYPE, PREFIX)                                              \
   static size_t PREFIX##_length(const PREFIX##_darray *darray) {               \
-    return darray->LENGTH;                                                     \
+    return darray->length;                                                     \
   }
 
-#define CG_IS_FULL(DARRAY) (DARRAY->LENGTH >= DARRAY->CAPACITY ? 1 : 0)
+#define CG_IS_FULL(DARRAY) (DARRAY->length >= DARRAY->capacity ? 1 : 0)
 
 #define CG_ENLARGE(DARRAY, TYPE)                                               \
-  if (DARRAY->CAPACITY == 0) {                                                 \
-    DARRAY->DATA = malloc(sizeof(TYPE));                                       \
-    DARRAY->CAPACITY = 1;                                                      \
+  if (DARRAY->capacity == 0) {                                                 \
+    DARRAY->data = malloc(sizeof(TYPE));                                       \
+    DARRAY->capacity = 1;                                                      \
   } else {                                                                     \
-    DARRAY->DATA = realloc(DARRAY->DATA, sizeof(TYPE) * DARRAY->CAPACITY * 2); \
-    DARRAY->CAPACITY *= 2;                                                     \
+    DARRAY->data = realloc(DARRAY->data, sizeof(TYPE) * DARRAY->capacity * 2); \
+    DARRAY->capacity *= 2;                                                     \
   }
 
 #define MAKE_PUSH(TYPE, PREFIX)                                                \
@@ -77,12 +77,12 @@
     if (CG_IS_FULL(darray)) {                                                  \
       CG_ENLARGE(darray, TYPE)                                                 \
     }                                                                          \
-    darray->DATA[darray->LENGTH++] = value;                                    \
+    darray->data[darray->length++] = value;                                    \
   }
 
 #define MAKE_POP(TYPE, PREFIX)                                                 \
   static TYPE PREFIX##_pop(PREFIX##_darray *darray) {                          \
-    return darray->DATA[--darray->LENGTH];                                     \
+    return darray->data[--darray->length];                                     \
   }
 
 #define MAKE_INSERT(TYPE, PREFIX)                                              \
@@ -91,24 +91,24 @@
     if (CG_IS_FULL(darray)) {                                                  \
       CG_ENLARGE(darray, TYPE);                                                \
     }                                                                          \
-    memmove(darray->DATA + index + 1, darray->DATA + index,                    \
-            sizeof(TYPE) * (darray->LENGTH - index));                          \
-    darray->LENGTH++;                                                          \
-    darray->DATA[index] = value;                                               \
+    memmove(darray->data + index + 1, darray->data + index,                    \
+            sizeof(TYPE) * (darray->length - index));                          \
+    darray->length++;                                                          \
+    darray->data[index] = value;                                               \
   }
 
 #define MAKE_DELETE(TYPE, PREFIX)                                              \
   static TYPE PREFIX##_delete(size_t index, PREFIX##_darray *darray) {         \
-    TYPE value = darray->DATA[index];                                          \
-    memmove(darray->DATA + index, darray->DATA + index + 1,                    \
-            sizeof(TYPE) * (darray->LENGTH - index - 1));                      \
-    darray->LENGTH--;                                                          \
+    TYPE value = darray->data[index];                                          \
+    memmove(darray->data + index, darray->data + index + 1,                    \
+            sizeof(TYPE) * (darray->length - index - 1));                      \
+    darray->length--;                                                          \
     return value;                                                              \
   }
 
 #define MAKE_GET(TYPE, PREFIX)                                                 \
   static TYPE PREFIX##_get(size_t index, const PREFIX##_darray *darray) {      \
-    return darray->DATA[index];                                                \
+    return darray->data[index];                                                \
   }
 
 #endif
