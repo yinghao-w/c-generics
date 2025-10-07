@@ -48,9 +48,9 @@ static void *fp_resize(void *darray, size_t element_size) {
 
 #define FP_RESIZE(darray) (darray = fp_resize(darray, sizeof(*darray)))
 
-#define fp_destroy(darray) ((darray == NULL) ? 0 : (free(FP_HEADER(darray)), 0))
+#define fp_destroy(darray) (darray ? free(FP_HEADER(darray)) : 0)
 
-#define fp_length(darray) ((darray == NULL) ? 0 : FP_LENGTH(darray))
+#define fp_length(darray) (darray ? FP_LENGTH(darray) : 0)
 
 #define fp_push(value, darray)                                                 \
   (!darray || FP_IS_FULL(darray) ? FP_RESIZE(darray) : 0,                      \
