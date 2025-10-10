@@ -10,6 +10,11 @@
  * Initialise:
  *
  * 		int *darray = NULL;
+ *
+ * Resize the array to hold at least cap many elements:
+ *
+ * 		fp_resize(cap, darray);
+ *
  */
 
 #ifndef FAT_POINTER_H
@@ -32,7 +37,7 @@ typedef struct {
 
 #define FP_IS_FULL(darray) (FP_LENGTH(darray) >= FP_CAPACITY(darray) ? 1 : 0)
 
-static void *fp_resize(void *darray, size_t element_size) {
+static void *fp_enlarge(void *darray, size_t element_size) {
   fp_header *p;
   if (darray) {
     p = realloc(FP_HEADER(darray),
@@ -46,20 +51,25 @@ static void *fp_resize(void *darray, size_t element_size) {
   return ++p;
 }
 
-#define FP_RESIZE(darray) (darray = fp_resize(darray, sizeof(*darray)))
+#define FP_ENLARGE(darray) (darray = fp_enlarge(darray, sizeof(*darray)))
 
 #define fp_destroy(darray) (darray ? free(FP_HEADER(darray)), 0 : 0)
 
 #define fp_length(darray) (darray ? FP_LENGTH(darray) : 0)
 
+#define fp_resize(cap, darray)                                                 \
+  while (!darray || cap > FP_CAPACITY(darray)) {                               \
+    FP_ENLARGE(darray);                                                        \
+  }
+
 #define fp_push(value, darray)                                                 \
-  (!darray || FP_IS_FULL(darray) ? FP_RESIZE(darray) : 0,                      \
+  (!darray || FP_IS_FULL(darray) ? FP_ENLARGE(darray) : 0,                     \
    darray[FP_LENGTH(darray)++] = value)
 
 #define fp_pop(darray) (darray[--FP_LENGTH(darray)])
 
 #define fp_insert(value, index, darray)                                        \
-  (!darray || FP_IS_FULL(darray) ? FP_RESIZE(darray) : 0,                      \
+  (!darray || FP_IS_FULL(darray) ? FP_ENLARGE(darray) : 0,                     \
    memmove(darray + index + 1, darray + index,                                 \
            sizeof(*darray) * (FP_LENGTH(darray) - index)),                     \
    FP_LENGTH(darray)++, darray[index] = value)
