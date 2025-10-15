@@ -9,11 +9,33 @@
  *
  * Initialise:
  *
- * 		int *darray = NULL;
+ * 		int *arr = NULL;
  *
  * Resize the array to hold at least cap many elements:
  *
- * 		fp_resize(cap, darray);
+ * 		fp_resize(cap, arr);
+ *
+ * Note that when the array is resized, either explicitly as above or by
+ * push/insert operations, the new array address is assigned back to arr
+ * through the macro. Be careful when offloading element adding operations to
+ * other functions:
+ *
+ * 		void add_one(int arr[]) {
+ * 			fp_push(1, arr);
+ * 		}
+ * 		{
+ * 			...
+ * 			int *my_arr = NULL;
+ * 			fp_push(5, my_arr);
+ * 			fp_push(2, my_arr);
+ * 			add_one(my_arr);
+ *
+ * 			...
+ * 		}
+ *
+ * If the array gets resized to a different location, only the arr parameter in
+ * add_one will be updated, my_arr will still hold the outdated address. One
+ * must return the updated address and assign it back to my_arr.
  *
  */
 
