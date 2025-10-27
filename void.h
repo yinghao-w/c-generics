@@ -47,12 +47,12 @@ void v_destroy(V_Darray *darray);
 
 size_t v_length(const V_Darray *darray);
 
-void v_push(const void *value, V_Darray *darray);
-void v_pop(void *value, V_Darray *darray);
+void v_push(V_Darray *darray, const void *value);
+void v_pop(V_Darray *darray, void *value);
 
-void v_insert(const void *value, size_t index, V_Darray *darray);
-void v_delete(void *value, size_t index, V_Darray *darray);
+void v_insert(V_Darray *darray, const void *value, size_t index);
+void v_delete(V_Darray *darray, void *value, size_t index);
 
-void v_get(void *value, size_t index, const V_Darray *darray);
+void v_get(const V_Darray *darray, void *value, size_t index);
 
 #endif

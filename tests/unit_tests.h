@@ -82,13 +82,13 @@ U_TYPE T;
 #define U_DESTROY(A) v_destroy(A)
 #define U_PUSH(V, A)                                                           \
   T = V;                                                                       \
-  v_push(&T, A)
-#define U_POP(A) (v_pop(&T, A), T)
+  v_push(A, &T)
+#define U_POP(A) (v_pop(A, &T), T)
 #define U_INS(V, I, A)                                                         \
   T = V;                                                                       \
-  v_insert(&T, I, A)
-#define U_DEL(I, A) v_delete(NULL, I, A)
-#define U_GET(I, A) (v_get(&T, I, A), T)
+  v_insert(A, &T, I)
+#define U_DEL(I, A) v_delete(A, NULL, I)
+#define U_GET(I, A) (v_get(A, &T, I), T)
 #define U_LEN(A) v_length(A)
 
 #endif

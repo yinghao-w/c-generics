@@ -40,8 +40,7 @@ static void v_enlarge(V_Darray *darray) {
     darray->capacity *= 2;
   }
 }
-
-void v_push(const void *value, V_Darray *darray) {
+void v_push(V_Darray *darray, const void *value) {
   if (v_is_full(darray)) {
     v_enlarge(darray);
   }
@@ -50,7 +49,7 @@ void v_push(const void *value, V_Darray *darray) {
   darray->length++;
 }
 
-void v_pop(void *value, V_Darray *darray) {
+void v_pop(V_Darray *darray, void *value) {
   if (value) {
     memcpy(value, darray->data + darray->element_size * (darray->length - 1),
            darray->element_size);
@@ -58,7 +57,7 @@ void v_pop(void *value, V_Darray *darray) {
   darray->length--;
 }
 
-void v_insert(const void *value, size_t index, V_Darray *darray) {
+void v_insert(V_Darray *darray, const void *value, size_t index) {
   if (v_is_full(darray)) {
     v_enlarge(darray);
   }
@@ -70,7 +69,7 @@ void v_insert(const void *value, size_t index, V_Darray *darray) {
          darray->element_size);
 }
 
-void v_delete(void *value, size_t index, V_Darray *darray) {
+void v_delete(V_Darray *darray, void *value, size_t index) {
   if (value) {
     memcpy(value, darray->data + darray->element_size * index,
            darray->element_size);
@@ -81,7 +80,7 @@ void v_delete(void *value, size_t index, V_Darray *darray) {
   darray->length--;
 }
 
-void v_get(void *value, size_t index, const V_Darray *darray) {
+void v_get(const V_Darray *darray, void *value, size_t index) {
   memcpy(value, darray->data + darray->element_size * index,
          darray->element_size);
 }

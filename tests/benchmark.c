@@ -45,9 +45,9 @@ void speed_test(void) {
   for (i = 0; i < M; ++i) {
     V_Darray *darray = v_create(2, sizeof(int));
     for (j = 0; j < N; ++j)
-      v_push(&j, darray);
+      v_push(darray, &j);
     for (j = 0; j < N; ++j)
-      v_pop(NULL, darray);
+      v_pop(darray, NULL);
     v_destroy(darray);
   }
   printf("void.h : %.3f sec\n", (float)(clock() - t) / CLOCKS_PER_SEC);
