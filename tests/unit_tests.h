@@ -44,11 +44,11 @@ CG_INIT(U_TYPE, u)
 
 #define U_CREATE(A, C) u_darray *A = u_create(C)
 #define U_DESTROY(A) u_destroy(A)
-#define U_PUSH(V, A) u_push(V, A)
+#define U_PUSH(V, A) u_push(A, V)
 #define U_POP(A) u_pop(A)
-#define U_INS(V, I, A) u_insert(V, I, A)
-#define U_DEL(I, A) u_delete(I, A)
-#define U_GET(I, A) u_get(I, A)
+#define U_INS(V, I, A) u_insert(A, V, I)
+#define U_DEL(I, A) u_delete(A, I)
+#define U_GET(I, A) u_get(A, I)
 #define U_LEN(A) u_length(A)
 
 #endif

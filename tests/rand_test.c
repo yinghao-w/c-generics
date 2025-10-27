@@ -26,7 +26,7 @@ void fuzz_test(void) {
       int op = rand() % 4;
 
       if (i_length(cg_darray) == 0 || op == 0) {
-        i_push(j, cg_darray);
+        i_push(cg_darray, j);
         fp_push(fp_darray, j);
         v_push(&j, v_darray);
       } else if (op == 1) {
@@ -38,12 +38,12 @@ void fuzz_test(void) {
         assert(cg == v);
       } else if (op == 2) {
         int index = rand() % i_length(cg_darray);
-        i_insert(j, index, cg_darray);
+        i_insert(cg_darray, j, index);
         fp_insert(fp_darray, j, index);
         v_insert(&j, index, v_darray);
       } else {
         int index = rand() % i_length(cg_darray);
-        i_delete(index, cg_darray);
+        i_delete(cg_darray, index);
         fp_delete(fp_darray, index);
         v_delete(NULL, index, v_darray);
       }
@@ -52,10 +52,10 @@ void fuzz_test(void) {
       assert(i_length(cg_darray) == v_length(v_darray));
 
       for (int k = 0; k < i_length(cg_darray); k++) {
-        assert(i_get(k, cg_darray) == fp_darray[k]);
+        assert(i_get(cg_darray, k) == fp_darray[k]);
         int v;
         v_get(&v, k, v_darray);
-        assert(i_get(k, cg_darray) == v);
+        assert(i_get(cg_darray, k) == v);
       }
     }
 

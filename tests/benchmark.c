@@ -23,7 +23,7 @@ void speed_test(void) {
   for (i = 0; i < M; ++i) {
     i_darray *darray = i_create(2);
     for (j = 0; j < N; ++j)
-      i_push(j, darray);
+      i_push(darray, j);
     for (j = 0; j < N; ++j)
       i_pop(darray);
     i_destroy(darray);

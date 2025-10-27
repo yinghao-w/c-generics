@@ -73,7 +73,7 @@
   }
 
 #define MAKE_PUSH(TYPE, PREFIX)                                                \
-  static void PREFIX##_push(TYPE value, PREFIX##_darray *darray) {             \
+  static void PREFIX##_push(PREFIX##_darray *darray, TYPE value) {             \
     if (CG_IS_FULL(darray)) {                                                  \
       CG_ENLARGE(darray, TYPE)                                                 \
     }                                                                          \
@@ -86,8 +86,8 @@
   }
 
 #define MAKE_INSERT(TYPE, PREFIX)                                              \
-  static void PREFIX##_insert(TYPE value, size_t index,                        \
-                              PREFIX##_darray *darray) {                       \
+  static void PREFIX##_insert(PREFIX##_darray *darray, TYPE value,             \
+                              size_t index) {                                  \
     if (CG_IS_FULL(darray)) {                                                  \
       CG_ENLARGE(darray, TYPE);                                                \
     }                                                                          \
@@ -98,7 +98,7 @@
   }
 
 #define MAKE_DELETE(TYPE, PREFIX)                                              \
-  static TYPE PREFIX##_delete(size_t index, PREFIX##_darray *darray) {         \
+  static TYPE PREFIX##_delete(PREFIX##_darray *darray, size_t index) {         \
     TYPE value = darray->data[index];                                          \
     memmove(darray->data + index, darray->data + index + 1,                    \
             sizeof(TYPE) * (darray->length - index - 1));                      \
@@ -107,7 +107,7 @@
   }
 
 #define MAKE_GET(TYPE, PREFIX)                                                 \
-  static TYPE PREFIX##_get(size_t index, const PREFIX##_darray *darray) {      \
+  static TYPE PREFIX##_get(const PREFIX##_darray *darray, size_t index) {      \
     return darray->data[index];                                                \
   }
 
