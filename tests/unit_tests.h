@@ -61,10 +61,10 @@ char impl[] = "fat_pointer.h";
 
 #define U_CREATE(A, C) U_TYPE *A = NULL
 #define U_DESTROY(A) fp_destroy(A)
-#define U_PUSH(V, A) fp_push(V, A)
+#define U_PUSH(V, A) fp_push(A, V)
 #define U_POP(A) fp_pop(A)
-#define U_INS(V, I, A) fp_insert(V, I, A)
-#define U_DEL(I, A) fp_delete(I, A)
+#define U_INS(V, I, A) fp_insert(A, V, I)
+#define U_DEL(I, A) fp_delete(A, I)
 #define U_GET(I, A) A[I]
 #define U_LEN(A) fp_length(A)
 

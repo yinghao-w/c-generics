@@ -13,7 +13,7 @@
  *
  * Resize the array to hold at least cap many elements:
  *
- * 		fp_resize(cap, arr);
+ * 		fp_resize(arr, cap);
  *
  * Note that when the array is resized, either explicitly as above or by
  * push/insert operations, the new array address is assigned back to arr
@@ -21,13 +21,13 @@
  * other functions:
  *
  * 		void add_one(int arr[]) {
- * 			fp_push(1, arr);
+ * 			fp_push(arr, 1);
  * 		}
  * 		{
  * 			...
  * 			int *my_arr = NULL;
- * 			fp_push(5, my_arr);
- * 			fp_push(2, my_arr);
+ * 			fp_push(my_arr, 5);
+ * 			fp_push(my_arr, 2);
  * 			add_one(my_arr);
  *
  * 			...
@@ -59,7 +59,7 @@ typedef struct {
 
 #define FP_IS_FULL(darray) (FP_LENGTH(darray) >= FP_CAPACITY(darray) ? 1 : 0)
 
-static void *fp_enlarge(void *darray, size_t element_size) {
+static void *fp_enlarge_(size_t element_size, void *darray) {
   fp_header *p;
   if (darray) {
     p = realloc(FP_HEADER(darray),
@@ -73,30 +73,30 @@ static void *fp_enlarge(void *darray, size_t element_size) {
   return ++p;
 }
 
-#define FP_ENLARGE(darray) (darray = fp_enlarge(darray, sizeof(*darray)))
+#define FP_ENLARGE(darray) (darray = fp_enlarge_(sizeof(*darray), darray))
 
 #define fp_destroy(darray) (darray ? free(FP_HEADER(darray)), 0 : 0)
 
 #define fp_length(darray) (darray ? FP_LENGTH(darray) : 0)
 
-#define fp_resize(cap, darray)                                                 \
+#define fp_resize(darray, cap)                                                 \
   while (!darray || cap > FP_CAPACITY(darray)) {                               \
     FP_ENLARGE(darray);                                                        \
   }
 
-#define fp_push(value, darray)                                                 \
+#define fp_push(darray, value)                                                 \
   (!darray || FP_IS_FULL(darray) ? FP_ENLARGE(darray) : 0,                     \
    darray[FP_LENGTH(darray)++] = value)
 
 #define fp_pop(darray) (darray[--FP_LENGTH(darray)])
 
-#define fp_insert(value, index, darray)                                        \
+#define fp_insert(darray, value, index)                                        \
   (!darray || FP_IS_FULL(darray) ? FP_ENLARGE(darray) : 0,                     \
    memmove(darray + index + 1, darray + index,                                 \
            sizeof(*darray) * (FP_LENGTH(darray) - index)),                     \
    FP_LENGTH(darray)++, darray[index] = value)
 
-#define fp_delete(index, darray)                                               \
+#define fp_delete(darray, index)                                               \
   (memmove(darray + index, darray + index + 1,                                 \
            sizeof(*darray) * (FP_LENGTH(darray) - index - 1)),                 \
    --FP_LENGTH(darray))

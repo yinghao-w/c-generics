@@ -34,7 +34,7 @@ void speed_test(void) {
   for (i = 0; i < M; ++i) {
     int *darray = NULL;
     for (j = 0; j < N; ++j)
-      fp_push(j, darray);
+      fp_push(darray, j);
     for (j = 0; j < N; ++j)
       fp_pop(darray);
     fp_destroy(darray);
